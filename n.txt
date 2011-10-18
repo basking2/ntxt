@@ -38,3 +38,5 @@ Perhaps we should stop the design here before it gets too complicated.
 
 [todo] [p1][p2] [Date: Now] Better tagging rules. 
 [todo] Indented text is also a block?
+
+= Tue Oct 18, 2011, Qualys, Madison =

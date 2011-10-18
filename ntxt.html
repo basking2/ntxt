@@ -133,12 +133,11 @@
       } // hlevel
       
       function extractTags(block, line) {
-        var re = /\[([^\[]+)\]/mg
+        var re = /^\s*\[([^\[]+)\]/m
         var m
         while ( ( m = re.exec(line) ) ) {
           block.addTag(m[1])
-          // +1 to skip the ] character.
-          line = line.substr(re.lastIndex)
+          line = line.substr(m[0].length)
         }
       }
       
@@ -418,19 +417,27 @@
 
   var ntxtTree=null;
   var tagFilter = ''
+  var textFilter = ''
   
   function printTree(n, element) {
     
-    html = ""
+    var html = ""
     
     n.rootBlock.walkText( 
       function(txt, depth, node) {
-        if ( txt.length == 0 
-             || -1 == node.tags.join(',').indexOf(tagFilter) ) 
-        {
-          return
+      
+        if ( txt.length == 0 ) {
+          return;
         }
-        html += txt
+        
+        if (tagFilter.length > 0 && node.tags.join(',').indexOf(tagFilter) >= 0) {
+          html += txt
+        } else if (textFilter.length > 0 && txt.indexOf( textFilter ) >= 0) {
+            html += txt
+        } else if ( tagFilter.length == 0 && textFilter.length == 0 ) {
+          html += txt
+        }
+        
       },
       function(depth, node) {
         html += '<div class="ntxt" title="Tags: '+node.tags.join(', ')+'">'
@@ -444,12 +451,15 @@
   }
   
   function searchTags(){
-    e = document.getElementById('searchTagsInput')
-
-    tagFilter = e.value
+    tagFilter = document.getElementById('searchTagsInput').value
     
     printTree(ntxtTree, document.getElementById('ntxtDiv'));
-
+  }
+  
+  function searchText(){
+    textFilter =  document.getElementById('searchTextInput').value
+    
+    printTree(ntxtTree, document.getElementById('ntxtDiv'));
   }
   
   window.onload = function(){
@@ -459,8 +469,15 @@
     
     document.getElementById('searchTagsInput').focus()
     
-    document.getElementById('allTags').innerHTML=
-      ntxtTree.rootBlock.tags.join(', ')
+    var tagHash = {}
+    
+    for( var i in ntxtTree.rootBlock.tags ) {
+      tagHash[ntxtTree.rootBlock.tags[i]]=1
+    }
+    
+    document.getElementById('allTags').innerHTML = Object.keys(tagHash)
+                                                         .sort()
+                                                         .join(', ')
   }
   </script>
   <style>
@@ -477,6 +494,8 @@
   </style>
 </head>
 <body>
+Search Text: <input type='text' onKeyUp='searchText()' id='searchTextInput' />
+<br>
 Search Tags: <input type='text' onKeyUp='searchTags()' id='searchTagsInput' />
 <div id='allTags'></div>
 <div id='ntxtDiv'>
