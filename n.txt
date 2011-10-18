@@ -1,0 +1,40 @@
+= Thu Oct 13 01:22:34 CDT 2011, Deerfield, WI =
+
+== The Beginning of a Digital Notebook ==
+
+Suggested by another developer:
+1. A plain text file.
+2. Date at the top, proceed down.
+3. Open problems for me:
+3.1. I want a wiki syntax of some sort to conver this to html.
+3.2. I would like this to break up into sections, but it's unclear to me the
+     best way to do that. For now, "h1" tags denoted by = text = will be
+     enough.
+
+= Fri Oct 14 2011, Qualys, Madison =
+
+  [rns] Qualys customer personas:
+  https://wiki.dev.qualys.com/wiki/index.php/Product_Management_Customer_Personas
+
+== Notes Ideas ==
+[design]
+
+This is a simple markup for this file. Some ideas to make this more mine-able.
+
+The headers denote blocks that end at the EOF or when a higher header is
+encountered.
+
+Tags are denoted by [word] or [word1,word2] beginning a line. The tag
+applies to the block it is in, the words that follow on the line, or the
+following paragraph of text.
+
+Eventually we would like to have a query system that can search for:
+  1. Blocks by tag.
+  2. Paragraphs by tag.
+  3. Lines by tag.
+  4. Regular plain-text search of blocks.
+  
+Perhaps we should stop the design here before it gets too complicated.
+
+[todo] [p1][p2] [Date: Now] Better tagging rules. 
+[todo] Indented text is also a block?
