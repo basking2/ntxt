@@ -40,3 +40,9 @@ Perhaps we should stop the design here before it gets too complicated.
 [todo] Indented text is also a block?
 
 = Tue Oct 18, 2011, Qualys, Madison =
+
+  [2011-10-18 15:45]
+  [eod notes]
+  Completed Javascript parser for this small wiki-ish format.
+  Planning a ruby command-line version of this for mining larger documents
+  and possibly producing HTML output.
