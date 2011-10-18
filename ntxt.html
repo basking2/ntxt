@@ -134,13 +134,11 @@
       
       function extractTags(block, line) {
         var re = /\[([^\[]+)\]/mg
-        var subl = line
         var m
-        while ( ( m = re.exec(subl) ) ) {
+        while ( ( m = re.exec(line) ) ) {
           block.addTag(m[1])
-          console.info("Tag "+m[1] + " from "+line)
           // +1 to skip the ] character.
-          subl = subl.substr(re.lastIndex)
+          line = line.substr(re.lastIndex)
         }
       }
       
@@ -339,6 +337,52 @@
       
       block.isRoot = function() { return this.parent }
       
+      block.walk = function(f) {
+        f(this)
+
+        for ( c in this.children ) {
+          this.children[c].walk(f)
+        }
+      }
+      
+      // Takes a function that takes:
+      //   f(text, depth, node)
+      block.walkText = function(printFunc, enterChild, exitChild) {
+        this.walkTextHelper(printFunc, enterChild, exitChild, 0)
+      }
+      
+      block.walkTextHelper = function(printFunc, enterChild, exitChild, depth) {
+
+        enterChild(depth, this);
+        
+        if ( this.children.length == 0 ) {
+          printFunc( this.text(), depth, this )
+        } else {
+      
+          var prevEnd = this.start
+          
+          for ( var c in this.children ) {
+            var child = this.children[c]
+            var start = prevEnd
+            var offset = child.start - start
+            printFunc(this.ntxt.text.substr(start, offset), depth, this)
+            this.children[c].walkTextHelper(printFunc,
+                                            enterChild,
+                                            exitChild,
+                                            depth+1)
+            prevEnd = child.start + child.offset
+          }
+          
+          var lastChild = this.children[this.children.length-1]
+          var start = lastChild.start + lastChild.offset
+          var offset = this.start + this.offset - start
+          
+          printFunc(this.ntxt.text.substr(start, offset), depth, this)
+        }
+        
+        exitChild(depth, this);
+
+      }
       
     },
   
@@ -372,19 +416,69 @@
     }
   }
 
-  var n=null;
+  var ntxtTree=null;
+  var tagFilter = ''
+  
+  function printTree(n, element) {
+    
+    html = ""
+    
+    n.rootBlock.walkText( 
+      function(txt, depth, node) {
+        if ( txt.length == 0 
+             || -1 == node.tags.join(',').indexOf(tagFilter) ) 
+        {
+          return
+        }
+        html += txt
+      },
+      function(depth, node) {
+        html += '<div class="ntxt" title="Tags: '+node.tags.join(', ')+'">'
+        html += '<pre class="ntxt">'
+      },
+      function(depth, node) {
+        html += '</pre></div>'
+      } )
+      
+    element.innerHTML = html
+  }
+  
+  function searchTags(){
+    e = document.getElementById('searchTagsInput')
+
+    tagFilter = e.value
+    
+    printTree(ntxtTree, document.getElementById('ntxtDiv'));
+
+  }
   
   window.onload = function(){
-    n = ntxt.fetchNtxt()
+    ntxtTree = ntxt.fetchNtxt()
     
-    var ntxtDiv = document.getElementById('ntxtDiv')
+    printTree(ntxtTree, document.getElementById('ntxtDiv'));
     
-    //ntxtDiv.innerHTML
+    document.getElementById('searchTagsInput').focus()
+    
+    document.getElementById('allTags').innerHTML=
+      ntxtTree.rootBlock.tags.join(', ')
   }
   </script>
+  <style>
+    .ntxt {
+      margin: 0em;
+      padding: 0em;
+    }
+    pre.ntxt {
+      padding-left: 1em;
+      border: 0px black solid;
+      border-left: 1px black solid;
+      background: rgba(000,000,000,0.02);
+    }
+  </style>
 </head>
 <body>
-
+Search Tags: <input type='text' onKeyUp='searchTags()' id='searchTagsInput' />
+<div id='allTags'></div>
 <div id='ntxtDiv'>
 </div>
 
