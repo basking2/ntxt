@@ -13,7 +13,7 @@
     txt = txt.replace(/^\s*==== (.*) ====/g, '<h4 class="ntxt_h">$1</h4>')
     txt = txt.replace(/^\s*=== (.*) ===/g, '<h3 class="ntxt_h">$1</h3>')
     txt = txt.replace(/^\s*== (.*) ==/g, '<h2 class="ntxt_h">$1</h2>')
-    txt = txt.replace(/^\s* = (.*) =/g, '<h1 class="ntxt_h">$1</h1>')
+    txt = txt.replace(/^\s*= (.*) =/g, '<h1 class="ntxt_h">$1</h1>')
     txt = txt.replace(/(https?:\/\/\S*)/g, '<a href="$1">$1</a>')
     return txt
   }

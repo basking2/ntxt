@@ -70,5 +70,6 @@ Perhaps we should stop the design here before it gets too complicated.
   Nothing much to say. :)
   
 == Sprint Task Breakout Meeting ==
-  1:00 - meeting pushed till tomorrow. Brian's kids sick.
-  
+  13:00 - meeting pushed till tomorrow. Brian's kids sick.
+  13:30 - Checking a final rev of the ntxt web view. 
+          It still needs an "About" page, but tis in pretty good shape, I think.
