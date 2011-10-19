@@ -51,14 +51,14 @@
     var a = document.getElementsByName('block_div')
     for ( var i=0; i < a.length; i+=1 ) {
       if ( a[i].tagName == 'DIV' ) {
-        a[i].addEventListener( 'click', toggleVisibility)
+        a[i].addEventListener( 'dblclick', toggleVisibility)
         a[i].id = "block_div_"+i
       }
     }
     var a = document.getElementsByName('block_div_plus')
     for ( var i=0; i < a.length; i+=1 ) {
       if ( a[i].tagName == 'DIV' ) {
-        a[i].addEventListener( 'click', toggleVisibility)
+        a[i].addEventListener( 'dblclick', toggleVisibility)
         a[i].id = "block_div_"+i+"_plus"
       }
     }
@@ -79,7 +79,7 @@
   
   function toggleVisibility(event) {
     event.stopPropagation()
-    event.preventDefault()
+    //event.preventDefault()
     var e = event.currentTarget
     var e2
     

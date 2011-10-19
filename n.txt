@@ -49,7 +49,9 @@ Perhaps we should stop the design here before it gets too complicated.
   
 = Wed Oct 19, 2011, Qualys, Madison =
 
-  [todo]
+  [done]
   1. Event handling to collapse blocks.
-  2. Search field selection (radio button)
-  3. Simple style touch-up.
+  2. Simple style touch-up.
+
+  [todo]  
+  3. Search field selection (radio button)
