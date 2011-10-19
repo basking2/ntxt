@@ -21,15 +21,14 @@ Suggested by another developer:
 
 == Notes Ideas ==
 [design]
+  This is a simple markup for this file. Some ideas to make this more mine-able.
 
-This is a simple markup for this file. Some ideas to make this more mine-able.
+  The headers denote blocks that end at the EOF or when a higher header is
+  encountered.
 
-The headers denote blocks that end at the EOF or when a higher header is
-encountered.
-
-Tags are denoted by [word] or [word1,word2] beginning a line. The tag
-applies to the block it is in, the words that follow on the line, or the
-following paragraph of text.
+  Tags are denoted by [word] or [word1,word2] beginning a line. The tag
+  applies to the block it is in, the words that follow on the line, or the
+  following paragraph of text.
 
 Eventually we would like to have a query system that can search for:
   1. Blocks by tag.
@@ -72,4 +71,7 @@ Perhaps we should stop the design here before it gets too complicated.
 == Sprint Task Breakout Meeting ==
   13:00 - meeting pushed till tomorrow. Brian's kids sick.
   13:30 - Checking a final rev of the ntxt web view. 
-          It still needs an "About" page, but tis in pretty good shape, I think.
+          It still needs an "About" page, but tis in 
+          pretty good shape, I think.
+  14:00 - Documenting n.txt.
+

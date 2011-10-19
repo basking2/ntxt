@@ -162,8 +162,8 @@
           if ( line ) {
             var hl = hlevel( line )
             if ( hl && parseInt(hl[0]) <= level ) {
-              state.prevLine() // rewind
-              break;           // we're done.
+              state.prevLine() // Rewind. We stepped onto another h block.
+              break;           // We're done.
             }
           }
           
@@ -173,7 +173,6 @@
                                state.block, 
                                state.start, 
                                state.offset)
-        block.title = title
         subState = state.lowerSubState()
         subState.block = block
         this.stack.push(subState)
@@ -219,7 +218,7 @@
           if ( nextIndentLevel < indentLevel ) {
             break;
           }
-          
+
           if ( nextIndentLevel > indentLevel ) {
             // Advance to the next line after parsing a subblock
             subState = state.upperSubState()
@@ -229,8 +228,7 @@
             this.stack.pop()
             state.seek(subState)
             line = state.currLine();
-          }
-          else {
+          } else {
             // Advance to the next line. Indentation is equal.
             extractTags(block, line)
             
@@ -260,13 +258,14 @@
             parser.parseHlevel(parseInt(tmp[0]), tmp[1])
 
           } else if ( ( tmp = line.match(/^(\s*)(\S.*)$/) ) ) {
-
+          
             state.consume()
             parser.parseIndent(tmp[1].length, tmp[2])
             
           }
-
+          
           line = state.nextLine()
+
         }
         
       }
