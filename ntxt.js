@@ -201,37 +201,45 @@
         // Blocks are ended by empty lines or lines with = starting them.
         while ( line != null ) {
           
+          // End of parse. Break.
           if ( line == null ) {
             break
           }
           
           var m = line.match(/^(\s*)([^=\s].*)$/)
           
+          // Found a header. Break.
           if ( m == null ) {
             break
           }
           
           nextIndentLevel = m[1].length
           
+          // Higher level block. Break.
           if ( nextIndentLevel < indentLevel ) {
-            state.prevLine()
             break;
-          } else if ( nextIndentLevel > indentLevel ) {
+          }
+          
+          if ( nextIndentLevel > indentLevel ) {
+            // Advance to the next line after parsing a subblock
             subState = state.upperSubState()
             subState.block = block
             this.stack.push(subState)
             this.parseIndent( nextIndentLevel, m[2] )
             this.stack.pop()
             state.seek(subState)
+            line = state.currLine();
           }
-          
-          extractTags(block, line)
-          
-          line = state.nextLine()
+          else {
+            // Advance to the next line. Indentation is equal.
+            extractTags(block, line)
+            
+            line = state.nextLine()
+          }
           
         } // while
         
-        // Update the offset.
+        // Update the offset of the partially constructed block.
         block.offset = state.offset        
         state.consume()
         

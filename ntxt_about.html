@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>About Ntxt</title>
+<style>
+body {
+  font-family: Arial;
+  font-size: 12px;
+}
+
+h1 {
+  font-size: 115%;
+}
+
+h2 {
+  font-size: 105%;
+}
+</style>
+</head>
+<body>
+
+<h1>About Ntxt</h1>
+
+<p><i>A tool to view n.txt formatted notes files.</i></p>
+
+<p>Ntxt is a reference to my <code>n.txt</code> file. In that file are notes
+in plain text. There are some wiki-like conventions to give it structure and
+help guide my reading and assist in searching or grepping for information.</p>
+
+<p>There is no way to edit the <code>n.txt</code> file through ntxt.html. 
+It's just here as a display tool.</p>
+
+<h2>Controls</h2>
+
+<ol>
+  <li>The "About" link links to this page.</li>
+  <li>The "Top" and "End" links link to the top and end of the page.</li>
+  <li>The "Toggle All" link collapses or expands all the text blocks.</li>
+  <li>Finally, the search drop-down controls what will be filtered (tags or 
+      all text) when the search box is typed in.</li>
+</ol>
+
+<h1>n.txt Formatting</h1>
+
+<p>Text is broken up into blocks. Blocks are given tags. That's all that
+<code>n.txt</code>'s format gives you.</p>
+
+<h2>Headers</h2>
+<p>Lines starting with a series of equal signs are the highest level of block.
+Lines with more equal signs (up to 6) denote subsequently lower level blocks.
+A lower level block will be nested inside a higher level block. 
+For example:</p>
+
+<pre>
+= Title =
+== Sub Title ==
+= Title 2 =
+</pre>
+
+<p>The first block of text will consist of "Title" and "Sub Title".
+"Title 2" will start a new block at level 1. Yes, this is a lot like
+h1 through h6 in HTML.</p>
+
+<h2>Indented Blocks</h2>
+
+<p>Blocks of text that have greater indentation are grouped into blocks of 
+incresing level. For example:</p> 
+
+<pre>
+= A Note =
+  o item 1
+  o item 2
+    Notes about
+    item 2 go 
+    here.
+  o item 3
+</pre>
+
+<p>There are 3 blocks above. The "A Note" block, The list of items, and the
+sub-note about "item 2".</p>
+
+<h2>One Last Big Block</h2>
+<p>The entire document is also one giant root block. We don't typically
+mention it (as you may noticed in the examples in this document), but
+for the curious, everything is wrapped in a giant root block.</p>
+
+<h2>Tags</h2>
+
+<p>Tags are denoted by lines that start with [tagName]. Many tags may follow
+in a sequence until that sequence is disrupted by a non-whitespace character.
+</p>
+
+<p>Tags are applied to the current block and to all parent blocks. Thus,</p>
+
+<pre>
+= A Note =
+  [todo] get things from store
+  [todo][p1] get important things from store
+= Another Note =
+  Dinner is at 8 tonight [yum!].
+</pre>
+
+<p>in the above example the tags "todo" and "p1" are both applied to "A Note"
+as well as the common indented block inside of "A Note". "Another Note"
+does not get any tags because (1) It is not an ancestor of the tagged blocks 
+and (2) "[yum!]" does not appear at the beginning of a line.</p>
+
+</body>
+</html>
