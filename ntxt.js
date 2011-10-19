@@ -9,7 +9,7 @@
     },
     
     BlockParser : function() {
-      parser = this
+      var parser = this
       parser.stack = [] // stack of states to resume parsing
       
       function State(lines, block, lineStart, start, lineEnd) {

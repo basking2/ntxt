@@ -28,7 +28,18 @@
         
       },
       function(depth, node) {
-        html += '<div class="ntxt" title="Tags: '+node.tags.join(', ')+'">'
+        html += '<div class="ntxt"  name="block_div_plus" '
+                + 'style="display:none;z-index:'
+                +   depth
+                +   ';font-size:110%;font-style:italic;" '
+                + '>+ '
+                + node.text().substr(0, 20) + '...'
+                + '</div>'
+        html += '<div class="ntxt" name="block_div" '
+                + 'title="Tags: '+node.tags.join(', ')+'" '
+                + 'style="display:inline;z-index:'+depth+'" '
+                +'">'
+ 
         html += '<pre class="ntxt">'
       },
       function(depth, node) {
@@ -36,6 +47,22 @@
       } )
       
     element.innerHTML = html
+    
+    var a = document.getElementsByName('block_div')
+    for ( var i=0; i < a.length; i+=1 ) {
+      if ( a[i].tagName == 'DIV' ) {
+        a[i].addEventListener( 'click', toggleVisibility)
+        a[i].id = "block_div_"+i
+      }
+    }
+    var a = document.getElementsByName('block_div_plus')
+    for ( var i=0; i < a.length; i+=1 ) {
+      if ( a[i].tagName == 'DIV' ) {
+        a[i].addEventListener( 'click', toggleVisibility)
+        a[i].id = "block_div_"+i+"_plus"
+      }
+    }
+
   }
   
   function searchTags(){
@@ -50,13 +77,36 @@
     printTree(ntxtTree, document.getElementById('ntxtDiv'));
   }
   
-  window.onload = function(){
+  function toggleVisibility(event) {
+    event.stopPropagation()
+    event.preventDefault()
+    var e = event.currentTarget
+    var e2
+    
+    // Using the event ID, choose the "other" div object. 
+    if ( /_plus$/.test( e.id ) ) {
+      e2 = document.getElementById(e.id.substr(0, e.id.length-5))
+    } else {
+      e2 = document.getElementById(e.id+"_plus")
+    }
+    
+
+    if ( e.style.display == 'none' ) {
+      e.style.display = 'inline'
+      e2.style.display= 'none'
+    } else {
+      e.style.display = 'none'
+      e2.style.display = 'inline'
+    }
+    
+  }
+  
+  window.addEventListener('load', function(e) {
     ntxtTree = ntxt.fetchNtxt()
     
     printTree(ntxtTree, document.getElementById('ntxtDiv'));
     
     document.getElementById('searchTagsInput').focus()
-    
     var tagHash = {}
     
     for( var i in ntxtTree.rootBlock.tags ) {
@@ -66,7 +116,8 @@
     document.getElementById('allTags').innerHTML = Object.keys(tagHash)
                                                          .sort()
                                                          .join(', ')
-  }
+  })
+  
   </script>
   
   
@@ -87,12 +138,22 @@
   
 </head>
 <body>
+
+Goto <a href="#end">End</a> <a name="top">&nbsp;</a>
+<br>
 Search Text: <input type='text' onKeyUp='searchText()' id='searchTextInput' />
 <br>
 Search Tags: <input type='text' onKeyUp='searchTags()' id='searchTagsInput' />
-<div id='allTags'></div>
+<br>
+
+<div style="display:inline-block;">Tags:</div> 
+
+<div style="font-family: monospace; display:inline-block;"   id='allTags'></div>
+
 <div id='ntxtDiv'>
 </div>
 
+<a name="end">&nbsp;</a>
+<a href="#top">Top</a>
 </body>
 </html>

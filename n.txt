@@ -46,3 +46,10 @@ Perhaps we should stop the design here before it gets too complicated.
   Completed Javascript parser for this small wiki-ish format.
   Planning a ruby command-line version of this for mining larger documents
   and possibly producing HTML output.
+  
+= Wed Oct 19, 2011, Qualys, Madison =
+
+  [todo]
+  1. Event handling to collapse blocks.
+  2. Search field selection (radio button)
+  3. Simple style touch-up.
