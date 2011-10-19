@@ -15,8 +15,60 @@ h2 {
   font-size: 105%;
 }
 </style>
+<script type="text/javascript">
+
+
+function buildToc(tocId) {
+
+  var idCount = 0
+  var nodeList = []
+  var tocTxt = ''
+  var level = 0
+  
+  for( var i = 1 ; i <= 6; i+=1 ) {
+    var hList = document.getElementsByTagName('h'+i)
+    for( var j = 0; j < hList.length; j+=1 ) {
+      nodeList.push( hList[j] )
+    }
+  }
+  
+  nodeList.sort( function(x,y) { return x.offsetTop > y.offsetTop } )
+
+  for( var i in nodeList ) {
+    var eleId = 'toc_id_'+idCount
+    idCount += 1
+    var ele = nodeList[i]
+    
+    if ( ele.tagName > 'H'+level ) {
+      level += 1
+      tocTxt += '<ol>'
+    } else if ( ele.tagName < 'H'+level ) {
+      level -= 1
+      tocTxt += '</ol>'
+    }
+    
+    ele.innerHTML = ele.innerHTML + '<a name="'+eleId+'"></a>'
+    tocTxt += '<li><a href="#'+eleId+'">'+ele.innerHTML+'</a></li>'
+  }
+  
+  for( ; level > 0; level-= 1) {
+    tocTxt += '</ol>'
+  }
+  
+  document.getElementById(tocId).innerHTML = tocTxt
+  
+}
+
+// On load...
+window.addEventListener('load', function(e) {
+  buildToc('toc')
+})
+</script>
 </head>
 <body>
+
+<h1>Contents</h1>
+<div id='toc'></div>
 
 <h1>About Ntxt</h1>
 
