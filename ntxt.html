@@ -3,9 +3,20 @@
   <script src="ntxt.js" type="text/javascript"></script>
   <script>
 
-  var ntxtTree=null;
+  var ntxtTree = null;
   var tagFilter = ''
   var textFilter = ''
+  
+  function wikiText(txt) {
+    txt = txt.replace(/====== (.*) ======/g, '<h6 class="ntxt_h">$1</h6>')
+    txt = txt.replace(/===== (.*) =====/g, '<h5 class="ntxt_h">$1</h5>')
+    txt = txt.replace(/==== (.*) ====/g, '<h4 class="ntxt_h">$1</h4>')
+    txt = txt.replace(/=== (.*) ===/g, '<h3 class="ntxt_h">$1</h3>')
+    txt = txt.replace(/== (.*) ==/g, '<h2 class="ntxt_h">$1</h2>')
+    txt = txt.replace(/= (.*) =/g, '<h1 class="ntxt_h">$1</h1>')
+    txt = txt.replace(/(https?:\/\/\S*)/g, '<a href="$1">$1</a>')
+    return txt
+  }
   
   function printTree(n, element) {
     
@@ -14,36 +25,39 @@
     n.rootBlock.walkText( 
       function(txt, depth, node) {
       
-        if ( txt.length == 0 ) {
+        if (txt.length == 0) {
           return;
         }
         
-        if (tagFilter.length > 0 && node.tags.join(',').indexOf(tagFilter) >= 0) {
+        txt = wikiText(txt)
+        
+        if (tagFilter.length > 0 
+           && node.tags.join(',').indexOf(tagFilter) >= 0) 
+        {
           html += txt
-        } else if (textFilter.length > 0 && txt.indexOf( textFilter ) >= 0) {
-            html += txt
-        } else if ( tagFilter.length == 0 && textFilter.length == 0 ) {
+        } else if (textFilter.length > 0 && txt.indexOf(textFilter) >= 0) {
+          html += txt
+        } else if (tagFilter.length == 0 && textFilter.length == 0) {
           html += txt
         }
         
       },
       function(depth, node) {
-        html += '<div class="ntxt"  name="block_div_plus" '
-                + 'style="display:none;z-index:'
-                +   depth
-                +   ';font-size:110%;font-style:italic;" '
+        html += '<div class="ntxt ntxt_hidden ntxt_'+depth+'"  name="block_div_plus" '
+                + 'style="display:none;z-index:'+depth+'" '
                 + '>+ '
                 + node.text().substr(0, 20) + '...'
                 + '</div>'
-        html += '<div class="ntxt" name="block_div" '
+        html += '<div class="ntxt ntxt_displayed ntxt_'+depth+'" name="block_div" '
                 + 'title="Tags: '+node.tags.join(', ')+'" '
-                + 'style="display:inline;z-index:'+depth+'" '
+                + 'style="display:block;z-index:'+depth+'" '
                 +'">'
  
-        html += '<pre class="ntxt">'
+        html += '<pre class="ntxt ntxt_displayed ntxt_'+depth+'">'
       },
       function(depth, node) {
-        html += '</pre></div>'
+        html += '</pre>'
+        html += '</div>'
       } )
       
     element.innerHTML = html
@@ -92,13 +106,23 @@
     
 
     if ( e.style.display == 'none' ) {
-      e.style.display = 'inline'
+      e.style.display = 'block'
       e2.style.display= 'none'
     } else {
       e.style.display = 'none'
-      e2.style.display = 'inline'
+      e2.style.display = 'block'
+    }
+  }
+
+  // Send double-click events to all block_div named tags.  
+  function toggleAll() {
+    var l = document.getElementsByName('block_div')
+    var e = new Event('dblclick', true, true)
+    for( var i = 0; i < l.length; i+=1 ){
+      l[i].dispatchEvent(e)
     }
     
+    return false;
   }
   
   window.addEventListener('load', function(e) {
@@ -107,53 +131,125 @@
     printTree(ntxtTree, document.getElementById('ntxtDiv'));
     
     document.getElementById('searchTagsInput').focus()
+
     var tagHash = {}
     
     for( var i in ntxtTree.rootBlock.tags ) {
       tagHash[ntxtTree.rootBlock.tags[i]]=1
     }
     
-    document.getElementById('allTags').innerHTML = Object.keys(tagHash)
-                                                         .sort()
-                                                         .join(', ')
+    document.getElementById('allTags').innerHTML = 
+      Object.keys(tagHash).sort().join(', ')
+
+    document.addEventListener('keypress', function(e) {
+
+      // Do not show help when the user touches input tags.
+      if ( e.target.tagName == 'INPUT' ) {
+        return
+      }
+
+      var c = String.fromCharCode(e.keyCode)
+
+      if ( c == '?' ) {
+        alert('help');
+      }
+    } )
   })
   
   </script>
   
   
   <style>
+    body {
+      font-family: Arial, "Sans";
+      font-size: 12px;
+    }
+    
+    h1 { font-size: 120%; margin: 0px; padding: 0px; }
+    h2 { font-size: 115%; margin: 0px; padding: 0px; }
+    h3 { font-size: 110%; margin: 0px; padding: 0px; }
+    h4 { font-size: 105%; margin: 0px; padding: 0px; }
+    h5 { font-size: 100%; margin: 0px; padding: 0px; }
+    h6 { font-size: 100%; margin: 0px; padding: 0px; }
+    
     .ntxt {
       margin: 0em;
       padding: 0em;
     }
-    pre.ntxt {
-      font-size: 95%;
+    
+    .ntxt_hidden {
+      font-style: italic;
+      font-weight: bold;
+    }
+    
+    .ntxt_h {
+      font-family: "Arial";
+    }
+    
+    pre.ntxt { 
+      font-family: "Liberation Mono",
+                   "Anonymous Pro",
+                   "Nimbus Mono",
+                   "Courier", 
+                   "Monospace";
+    }
+    
+    div.ntxt {
       padding-left: 1em;
       border: 0px black solid;
-      border-left: 2px #000080 solid;
-      background: rgba(0,0,255,0.03);
+      border-left: 2px #d0d0ff solid;
+    }
+    
+    div.ntxt_0 {
+      font-size:100%;
+      border: 0px black solid;
+      /* background: rgba(0,0,255,0.03); */
+    }
+    
+    #controller {
+      position: fixed; /* Could be fixed or absolute. */
+      right: -0;
+      bottom: -0;
+    }
+    
+    #alltagsLabel { 
+      font-weight: bold;
+    }
+    
+    #allTags, #allTagsLabel {
+      margin-bottom: 1em;
+      display: inline-block;
+    }
+    
+    #ntxtDiv {
+      /* Nothing. The class ntxt_0 wraps everything. */
     }
   </style>
   
   
 </head>
 <body>
+<a name="top">&nbsp;</a>
 
-Goto <a href="#end">End</a> <a name="top">&nbsp;</a>
-<br>
-Search Text: <input type='text' onKeyUp='searchText()' id='searchTextInput' />
-<br>
-Search Tags: <input type='text' onKeyUp='searchTags()' id='searchTagsInput' />
-<br>
+<div id='controller'>
+  Goto <a href="#end">End</a> 
+  <a href="#top">Top</a>
+  
+  <a href='#' onclick="toggleAll()">Toggle All</a>
+  <br>
+  Search Tags: <input type='text' onKeyUp='searchTags()' id='searchTagsInput' />
+  <br>
+  Search Text: <input type='text' onKeyUp='searchText()' id='searchTextInput' />
+  <br>
+</div>
 
-<div style="display:inline-block;">Tags:</div> 
+<div id="allTagsLabel">Tags:</div> 
 
-<div style="font-family: monospace; display:inline-block;"   id='allTags'></div>
+<div id='allTags'></div>
 
 <div id='ntxtDiv'>
 </div>
 
 <a name="end">&nbsp;</a>
-<a href="#top">Top</a>
 </body>
 </html>

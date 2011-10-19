@@ -1,3 +1,6 @@
+= Shortcuts / Links =
+  o http://sbaskinger.msn01.qualys.com/
+
 = Thu Oct 13 01:22:34 CDT 2011, Deerfield, WI =
 
 == The Beginning of a Digital Notebook ==
@@ -55,3 +58,17 @@ Perhaps we should stop the design here before it gets too complicated.
 
   [todo]  
   3. Search field selection (radio button)
+
+  Some fonts we are considering for this:
+  o Liberation Mono
+  o Anonymous Pro
+  o Courier (or course)
+  o Monospace (default)
+  o Nimbus Mono L
+  
+== Sprint Planning Meeting ==
+  Nothing much to say. :)
+  
+== Sprint Task Breakout Meeting ==
+  1:00
+  
