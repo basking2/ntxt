@@ -8,12 +8,12 @@
   var textFilter = ''
   
   function wikiText(txt) {
-    txt = txt.replace(/====== (.*) ======/g, '<h6 class="ntxt_h">$1</h6>')
-    txt = txt.replace(/===== (.*) =====/g, '<h5 class="ntxt_h">$1</h5>')
-    txt = txt.replace(/==== (.*) ====/g, '<h4 class="ntxt_h">$1</h4>')
-    txt = txt.replace(/=== (.*) ===/g, '<h3 class="ntxt_h">$1</h3>')
-    txt = txt.replace(/== (.*) ==/g, '<h2 class="ntxt_h">$1</h2>')
-    txt = txt.replace(/= (.*) =/g, '<h1 class="ntxt_h">$1</h1>')
+    txt = txt.replace(/^\s*====== (.*) ======/g, '<h6 class="ntxt_h">$1</h6>')
+    txt = txt.replace(/^\s*===== (.*) =====/g, '<h5 class="ntxt_h">$1</h5>')
+    txt = txt.replace(/^\s*==== (.*) ====/g, '<h4 class="ntxt_h">$1</h4>')
+    txt = txt.replace(/^\s*=== (.*) ===/g, '<h3 class="ntxt_h">$1</h3>')
+    txt = txt.replace(/^\s*== (.*) ==/g, '<h2 class="ntxt_h">$1</h2>')
+    txt = txt.replace(/^\s* = (.*) =/g, '<h1 class="ntxt_h">$1</h1>')
     txt = txt.replace(/(https?:\/\/\S*)/g, '<a href="$1">$1</a>')
     return txt
   }
@@ -79,17 +79,24 @@
 
   }
   
-  function searchTags(){
-    tagFilter = document.getElementById('searchTagsInput').value
+  function searchBlocks(){
+    var v = document.getElementById('searchType').value
+    var i = document.getElementById('searchInput').value
+    if ( v == 'tags' ) {
+      textFilter = ''
+      tagFilter = i
+    } else if ( v == 'text' ) {
+      textFilter = i
+      tagFilter = ''
+    } else {
+      textFilter = ''
+      tagFilter = ''
+    }
+    
     
     printTree(ntxtTree, document.getElementById('ntxtDiv'));
   }
   
-  function searchText(){
-    textFilter =  document.getElementById('searchTextInput').value
-    
-    printTree(ntxtTree, document.getElementById('ntxtDiv'));
-  }
   
   function toggleVisibility(event) {
     event.stopPropagation()
@@ -130,7 +137,7 @@
     
     printTree(ntxtTree, document.getElementById('ntxtDiv'));
     
-    document.getElementById('searchTagsInput').focus()
+    document.getElementById('searchInput').focus()
 
     var tagHash = {}
     
@@ -237,10 +244,11 @@
   
   <a href='#' onclick="toggleAll()">Toggle All</a>
   <br>
-  Search Tags: <input type='text' onKeyUp='searchTags()' id='searchTagsInput' />
-  <br>
-  Search Text: <input type='text' onKeyUp='searchText()' id='searchTextInput' />
-  <br>
+  <select id='searchType'>
+    <option value="tags">Search Tags</option>
+    <option value="text">Search Text</option>
+  </select>:
+  <input type='text' onKeyUp='searchBlocks()' id='searchInput' />
 </div>
 
 <div id="allTagsLabel">Tags:</div> 

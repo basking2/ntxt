@@ -1,4 +1,3 @@
-  
   ntxt = {
     Exception : function(msg, obj) {
       if ( ! ( this instanceof ntxt.Exception ) ) {
@@ -32,6 +31,7 @@
             return null
           }
         }
+        
         this.prevLine = function() {
           var nextLine = this.line - 1
           if ( nextLine >= this.lineStart ) {
