@@ -1,0 +1,70 @@
+body {
+  font-family: Arial, "Sans";
+  font-size: 12px;
+  background: #d0d0d0;
+}
+
+h1 { font-size: 120%; margin: 0px; padding: 0px; }
+h2 { font-size: 115%; margin: 0px; padding: 0px; }
+h3 { font-size: 110%; margin: 0px; padding: 0px; }
+h4 { font-size: 105%; margin: 0px; padding: 0px; }
+h5 { font-size: 100%; margin: 0px; padding: 0px; }
+h6 { font-size: 100%; margin: 0px; padding: 0px; }
+
+.ntxt {
+  margin: 0em;
+  padding: 0em;
+}
+
+.ntxt_hidden {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.ntxt_h {
+  font-family: "Arial";
+}
+
+pre.ntxt { 
+  font-family: "Liberation Mono",
+               "Anonymous Pro",
+               "Nimbus Mono",
+               "Courier", 
+               "Monospace";
+}
+
+div.ntxt {
+  padding-left: 0px;
+  margin-left: 0px;
+  /* Setup the border style for mouse hovers. */
+  border-left: 3px #a0a0f0 none;
+}
+
+div.ntxt_0 {
+  font-size:100%;
+  /* background: rgba(0,0,255,0.03); */
+}
+
+#controller {
+  position: fixed; /* Could be fixed or absolute. */
+  right: -0;
+  bottom: -0;
+  background: rgba(255,255,255,0.80);
+}
+
+#alltagsLabel { 
+  font-weight: bold;
+}
+
+#allTags, #allTagsLabel {
+  margin-bottom: 1em;
+  display: inline-block;
+}
+
+#ntxtDiv {
+  background: white;
+  /* Pad the very bottom so our controller never obscures text. */
+  padding-bottom: 3em;
+  padding: 1em;
+}
+

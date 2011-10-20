@@ -130,17 +130,6 @@ function toggleVisibility(event) {
   }
 }
 
-// Send double-click events to all block_div named tags.  
-function toggleAll() {
-  var l = document.getElementsByName('block_div')
-  var e = new Event('dblclick', true, true)
-  for( var i = 0; i < l.length; i+=1 ){
-    l[i].dispatchEvent(e)
-  }
-  
-  return false;
-}
-
 window.addEventListener('load', function(e) {
   ntxtTree = ntxt.fetchNtxt()
   
@@ -175,7 +164,11 @@ window.addEventListener('load', function(e) {
            addEventListener('keyup', function() {
              searchBlocks()
            } )
-
+  document.getElementById('toggleAll').
+        addEventListener('click', function() {
+          toggleAll()
+        } )
+  
   if ( ! ( toc && toc.buildToc ) ) {
     console.error("toc.js is required to be included before this js.")
   } else {           
