@@ -1,77 +1,29 @@
-= Shortcuts / Links =
-  o http://sbaskinger.msn01.qualys.com/
+= Ntxt =
 
-= Thu Oct 13 01:22:34 CDT 2011, Deerfield, WI =
+  Ntxt is a simple plain-text note file. This website is a simple parser
+  and view placed on top of that file format.
 
-== The Beginning of a Digital Notebook ==
+  Most data retrieval is done through tags and full-text searching.
+  There is some support for Wiki-like syntax, specifically
+  honoring the = title = syntax and we will automatically convert things
+  starting with http or https into links like this:
+  http://www.google.com
 
-Suggested by another developer:
-1. A plain text file.
-2. Date at the top, proceed down.
-3. Open problems for me:
-3.1. I want a wiki syntax of some sort to conver this to html.
-3.2. I would like this to break up into sections, but it's unclear to me the
-     best way to do that. For now, "h1" tags denoted by = text = will be
-     enough.
+== Controls ==
 
-= Fri Oct 14 2011, Qualys, Madison =
+  o Double click to collapse a box.
+  o Start a line with a [tagName] to tag that blocks as having that tag name.
+  o Control-Click a block to highlight it.
+  o Notice the search in the lower-left. Search is case sensitive and, no, 
+    we don't stem words.
+  [controls]
 
-  [rns] Qualys customer personas:
-  https://wiki.dev.qualys.com/wiki/index.php/Product_Management_Customer_Personas
+== More? ==
+  o The n.txt file that backs this page: http://dl.dropbox.com/u/24178519/ndemo/n.txt
+  o Check out the about link.
+  o Got feed back? Send it, but remember that this is supposed to be a 
+    view-only with few, but powerful, features..
+  o Enjoy!
+  [more]
 
-== Notes Ideas ==
-[design]
-  This is a simple markup for this file. Some ideas to make this more mine-able.
-
-  The headers denote blocks that end at the EOF or when a higher header is
-  encountered.
-
-  Tags are denoted by [word] or [word1,word2] beginning a line. The tag
-  applies to the block it is in, the words that follow on the line, or the
-  following paragraph of text.
-
-Eventually we would like to have a query system that can search for:
-  1. Blocks by tag.
-  2. Paragraphs by tag.
-  3. Lines by tag.
-  4. Regular plain-text search of blocks.
-  
-Perhaps we should stop the design here before it gets too complicated.
-
-[todo] [p1][p2] [Date: Now] Better tagging rules. 
-[todo] Indented text is also a block?
-
-= Tue Oct 18, 2011, Qualys, Madison =
-
-  [2011-10-18 15:45]
-  [eod notes]
-  Completed Javascript parser for this small wiki-ish format.
-  Planning a ruby command-line version of this for mining larger documents
-  and possibly producing HTML output.
-  
-= Wed Oct 19, 2011, Qualys, Madison =
-
-  [done]
-  1. Event handling to collapse blocks.
-  2. Simple style touch-up.
-
-  [todo]  
-  3. Search field selection (radio button)
-
-  Some fonts we are considering for this:
-  o Liberation Mono
-  o Anonymous Pro
-  o Courier (or course)
-  o Monospace (default)
-  o Nimbus Mono L
-  
-== Sprint Planning Meeting ==
-  Nothing much to say. :)
-  
-== Sprint Task Breakout Meeting ==
-  13:00 - meeting pushed till tomorrow. Brian's kids sick.
-  13:30 - Checking a final rev of the ntxt web view. 
-          It still needs an "About" page, but tis in 
-          pretty good shape, I think.
-  14:00 - Documenting n.txt.
 
