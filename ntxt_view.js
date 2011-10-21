@@ -130,9 +130,16 @@ function toggleVisibility(event) {
   }
 }
 
+function loadNtxt() {
+  ntxtTree = ntxt.fetchNtxt(document.getElementById('ntxtFile').value)
+}
+
 window.addEventListener('load', function(e) {
-  ntxtTree = ntxt.fetchNtxt()
   
+  loadNtxt()
+  
+  document.getElementById('ntxtFile').addEventListener('change', loadNtxt)
+
   printTree(ntxtTree, document.getElementById('ntxtDiv'));
   
   document.getElementById('searchInput').focus()
@@ -164,10 +171,6 @@ window.addEventListener('load', function(e) {
            addEventListener('keyup', function() {
              searchBlocks()
            } )
-  document.getElementById('toggleAll').
-        addEventListener('click', function() {
-          toggleAll()
-        } )
   
   if ( ! ( toc && toc.buildToc ) ) {
     console.error("toc.js is required to be included before this js.")
