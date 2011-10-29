@@ -200,6 +200,7 @@
         // Blocks are ended by empty lines or lines with = starting them.
         while ( line != null ) {
           
+          // FIXME - should this if be removed?
           // End of parse. Break.
           if ( line == null ) {
             break
