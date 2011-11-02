@@ -20,7 +20,7 @@ function printTree(n, element) {
   n.rootBlock.walkText( 
     function(txt, depth, node) {
     
-      if (txt.length == 0) {
+      if (txt == null || txt.length == 0) {
         return;
       }
       
