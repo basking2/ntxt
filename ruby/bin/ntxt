@@ -1,0 +1,88 @@
+#!/usr/bin/ruby
+
+require 'rubygems'
+require 'optparse'
+require 'ntxt'
+
+$configs = {
+  :cmd => 'tag',
+  :tag_string => ''
+}
+
+OptionParser.new do |opt|
+
+  opt.on('--trace', 'Trace through the file printing summaries.' ) do |v|
+    $configs[:cmd] = 'trace'
+  end
+  
+  opt.on('-p','--print', 'Print the whole file one block at a time.' ) do |v|
+    $configs[:cmd] = 'print'
+  end
+
+  opt.on('-T', '--print_tags', 'Print all tags in the document.') do |v|
+    $configs[:cmd] = 'print_tags'
+  end
+    
+  opt.on('-t', '--tag=String', 'Search and print the give so-tagged blocks.') do |v|
+    $configs[:cmd] = 'tag'
+    $configs[:tag_string] = v
+  end
+    
+  opt.on('-s','--search=String', 'Search the text for.' ) do |v|
+    $configs[:cmd] = 'search'
+    $configs[:search_string] = v
+  end
+end.parse! ARGV
+
+if ARGV.length > 0
+  $configs[:filename] = ARGV.shift
+else
+  puts "No file specified. Exiting"
+  exit 1
+end
+
+# Remove empty lines from blocks and print. Guards against nils and empty lines.
+def printNonEmpty(txt)
+  if txt
+    txt = txt.gsub(/^\s*$/m, '')
+    print txt, "\n" if txt.length > 0
+  end
+end
+
+$configs[:tag_string] = ARGV.shift if ARGV.length > 0
+
+ntxt = File.open($configs[:filename]) { |io| Ntxt::Ntxt.new(io.read) }
+
+case $configs[:cmd]
+when 'print_tags'
+  # Notice that we are re-wrapping the tags back into square brackets.
+  puts "[#{ntxt.rootBlock.tags.keys.sort.join('] [')}]"
+when 'tag'
+  ntxt.walkText(
+    lambda { |txt, depth, block|
+      printNonEmpty txt if block.tags.keys.sort.join(', ').index( $configs[:tag_string])},
+    lambda { |depth, block| },
+    lambda { |depth, block| } )
+when 'search'
+  ntxt.walkText(
+    lambda { |txt, depth, block|
+      printNonEmpty txt if txt && txt.index( $configs[:search_string])},
+    lambda { |depth, block| },
+    lambda { |depth, block| } )
+when 'print'
+  ntxt.walkText(
+    lambda { |txt, depth, block| print txt },
+    lambda { |depth, block| },
+    lambda { |depth, block| } )
+when 'trace'
+  ntxt.walkText(
+    lambda { |txt, depth, block| print txt },
+    lambda { |depth, block| puts "-----> #{depth} #{block.tags.keys.sort.join(',')}" },
+    lambda { |depth, block| puts "<----- #{depth} " } )
+when ''
+  # nop
+when nil
+  # nop
+else
+  puts "Command #{$configs[:cmd]} not found."
+end

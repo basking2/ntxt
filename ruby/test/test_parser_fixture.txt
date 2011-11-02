@@ -1,0 +1,16 @@
+= Mon Oct 31 07:54:16 CDT 2011 =
+
+[bug]
+When an indented line is immediately followed by an h1, that line is included in
+a top-level block.
+
+ a test
+ of the bug
+ this line will be wrong
+pop out
+ pop in
+= hi =
+  hello
+==bye==
+=hi=
+[bug] parse last line in file.
