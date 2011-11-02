@@ -1,24 +1,25 @@
 
 module Ntxt
 
-  # Root class that contains the text array that Blocks reference 
-  # and the root block.
+  # Root class that contains the text array that Block objects reference.
   class Ntxt
-    attr_accessor :text, :rootBlock
   
+    # The raw text file. This is a String.
+    attr_accessor :text
+    
+    # The root Block. It will contain all tags in the document
+    # and has a Block.start of 0 and a Block.offset of #text.length.
+    attr_accessor :rootBlock
+  
+    # Create a new Ntxt object. This requires a String that is the text
+    # of the object.
+    #   ntxt = Ntxt::Ntxt.new( File.open('n.txt'){ |io| io.read } )
     def initialize(text)
       @text  = text
       @rootBlock = (Parser.new).parse(self)
     end
 
-    # walkText(print, enter, exit)
-    # Walk the ntxt tree with 3 callbacks, print, enter, and exit.
-    # Print is a lambda that takes the text, the depth, and a copy of
-    # the Ntxt::Block it is in.
-    # Enter is the same, but is called with no text argument and is called
-    # when a block is entered (that is, the depth has increased by 1).
-    # Exit is the same, but is called with no text argument and is called
-    # when a block is exited (that is, the depth has decreated by 1).
+    # Calls Block#walkText.
     def walkText(print, enter, exit)
       @rootBlock.walkText(print, enter, exit)
     end

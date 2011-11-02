@@ -27,7 +27,13 @@ OptionParser.new do |opt|
     $configs[:cmd] = 'tag'
     $configs[:tag_string] = v
   end
-    
+  
+  opt.on('-l', '--last=[Integer]', 
+    'Show the last n top-level blocks. Default is 1') do |v|
+    $configs[:cmd] = 'last'
+    $configs[:last] = (v.nil?)? 1 : v.to_i
+  end
+      
   opt.on('-s','--search=String', 'Search the text for.' ) do |v|
     $configs[:cmd] = 'search'
     $configs[:search_string] = v
@@ -74,11 +80,17 @@ when 'print'
     lambda { |txt, depth, block| print txt },
     lambda { |depth, block| },
     lambda { |depth, block| } )
+when 'last'
+  ntxt.rootBlock.children[-$configs[:last].. -1].each do |blk|
+    puts blk.text
+  end
 when 'trace'
   ntxt.walkText(
     lambda { |txt, depth, block| print txt },
-    lambda { |depth, block| puts "-----> #{depth} #{block.tags.keys.sort.join(',')}" },
-    lambda { |depth, block| puts "<----- #{depth} " } )
+    lambda { |depth, block| 
+      puts "-----> #{depth} #{block.tags.keys.sort.join(',')}" },
+    lambda { |depth, block| 
+      puts "<----- #{depth} " } )
 when ''
   # nop
 when nil

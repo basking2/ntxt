@@ -2,12 +2,41 @@ require 'ntxt/block'
 require 'ntxt/ntxt'
 
 module Ntxt
+
+  # The parser for Ntxt. Most of this a typical user will not find useful
+  # with the exception of Parser.parse.
   class Parser
   
-    ###########################################################################
+    # An internal class that contains the current parse position
+    # and current limits on that parse, such as an artificial end-of-file
+    # marker to terminate a sub-parsing of a sub-block.    
     class State
     
-      attr_accessor :lines, :block, :lineStart, :lineEnd, :line, :start, :offset
+      # Array of lines. The result of Ntxt.text being split on '\n'
+      attr_accessor :lines
+      
+      # The current Block being built up.
+      attr_accessor :block
+      
+      # The index into #lines to start parsing at
+      # and before which #prevLine should return nil.
+      attr_accessor :lineStart
+      
+      # The index into #lines at which #nextLine should return nil.
+      # This defaults to #lines.length
+      attr_accessor :lineEnd
+      
+      # The current line this State points at.
+      attr_accessor :line
+      
+      # The index into Ntxt.text that corresponds to the first
+      # character of the #currLine.
+      attr_accessor :start
+      
+      # The offset from #start. The substring of Ntxt.text
+      # starting at #start and of length #offset will produce the
+      # text being considered by this State.
+      attr_accessor :offset
     
       def initialize(lines, block, lineStart, start, lineEnd)
         @lines     = lines      # The array of lines to parse.
@@ -19,7 +48,9 @@ module Ntxt
         @offset    = 0          # Offset from @start.
       end
       
-      # Return the current line.
+      # Return the current line. If #prevLine or #nextLine has
+      # walked outside of the #lineStart or #lineEnd limits this will
+      # return nil.
       def currLine
         if @line < @lineEnd && @line >= @lineStart
           @lines[@line]
@@ -28,8 +59,9 @@ module Ntxt
         end
       end
       
-      # Shift the state to the next line and return that line.
-      # If this goes out of bounds of the text nil is returned.
+      # Return the next line (#line + 1) unless we step beyond #lineEnd.
+      # If we exceed #lineEnd, nil is returned.
+      # Notice that this also updates #offset.
       def nextLine
       
         # If we are already past the end, return nil, do nothing.
@@ -46,8 +78,9 @@ module Ntxt
         end        
       end # nextLine
       
-      # Shift the state to the previous line and return that line.
-      # If this goes out of bounds of the text nil is returned.
+      # Return the previous line (#line - 1) unless we step before #lineStart.
+      # If we exceed #lineStart, nil is returned.
+      # Notice that this also updates #offset.
       def prevLine
         if @line < @lineStart
           nil
@@ -61,26 +94,33 @@ module Ntxt
       
       # Shift the state starting points to the current position of 
       # what has been read in this state, effecitvely consuming that input.
+      #
+      # The #start field is moved to #start+offset. The #offset is set to 0.
+      # Finally the #lineStart is set to #line.
       def consume
         @start = @start + @offset
         @offset = 0
         @lineStart = @line
       end
       
+      # Print as a string.
       def to_s
         "lineStart: %s, lineEnd: %s, line: %s, start: %s, offset: %s"%[
           @lineStart, @lineEnd, @line, @start, @offset
         ]
       end
       
-      # Seek this state's position to the tiven state's position.
+      # Seek this state's position forward to the given state's position.
+      # If a state with a position behind the current state's position is
+      # passed in as an argument the behavior is undefined.
       def seek(state)
         @line = state.line
         @offset = (state.start + state.offset - @start).abs()
       end # seek
       
     end # Parser::State
-    ###########################################################################
+
+
     
     # Return an array in which the first element is the indent length and
     # the second element is the contained text. Nil otherwise.
@@ -103,6 +143,17 @@ module Ntxt
       end
     end # self.hlevel
     
+    # Extract all the tags from the given line.
+    # [block] The block to which all tags will be added with Block#addTag.
+    #         All parent blocks recieve copies of the child block's tag.
+    # [line] The line to extract all tags from. Tags are
+    #        square-bracket-enclosed strings found in sequence at the
+    #        beginning of a line. If the sequence is broken, extraction stops.
+    #    Some tag examples:
+    #      [a tag] [another tag]
+    #      [a tag] [another tag] Not a tag. [not a tag]
+    #      No tag on this line.
+    #      No tag on this line either. [not a tag]
     def self.extractTags(block, line)
       while line =~ /^\s*\[([^\[]+)\]/m
         block.addTag($~[1])
@@ -111,6 +162,10 @@ module Ntxt
       end
     end # self.extractTags
     
+    # Parse the given Ntxt 's Ntxt#text.
+    # [ntxtObj] If this is an Ntxt object, Ntxt#text is parsed.
+    #           If +ntxtObj+ is not an Ntxt object, it is assumed to be
+    #           a valid argument for Ntxt.new and a new Ntxt is constructed.
     def parse(ntxtObj)
     
       # If ntxtObj isn't an Ntxt, create it as one.
@@ -132,8 +187,14 @@ module Ntxt
         nil
       end
     end # parse(ntxtObj)
-    
-    # Called from the first line of the text within the hlevel.
+
+    # Take the state off the top of the #stack and attempt to parse
+    # an Hlevel block. An HLevel block is a wiki-like header block of text.
+    # For example:
+    #   = Header 1 =
+    #   == Header 2 ==
+    # [level] an integer from 1 to 6.
+    # [title] a string of the text found between the equal signs.
     def parseHlevel(level, title)
       state = @stack[-1]
       
@@ -171,6 +232,10 @@ module Ntxt
       state.consume
     end # parseHlevel(leve, title)
     
+    # Parse blocks of text that are indented at the given level or greater.
+    # [indentLevel] an integer denoteing the number of characters this line is
+    #               indented at.
+    # [text] the content of the line that was indented.
     def parseIndent(indentLevel, text)
       state = @stack[-1]
       line = state.currLine
@@ -218,6 +283,13 @@ module Ntxt
       state.consume
     end # parseIndent(indentLevel, text)
     
+    # This is the root of the parser's call tree after #parse sets up
+    # the parse. This plucks the State off the Parser.stack, obtains the
+    # State.currLine.
+    # 
+    # When an indented line is found, #parseIndent is called.
+    # When a header line is found, #parseHlevel is caled.
+    # Otherwise, we move to the next line.
     def parseLines
       state = @stack[-1]
       line = state.currLine

@@ -1,0 +1,63 @@
+
+= About
+
+Ntxt is a simple text format that defines hierarchical blocks of text 
+and tags on those blocks. The goal is to give the author an easy way 
+to search their text in a slightly more structured way than +grep+ 'ing.
+
+Any tags found in a block are extracted and the block is _tagged_ with them.
+All parent blocks also receive the tags of their child blocks. Thus, the 
+root block is tagged with all tags occuring in the document.
+
+== Format Rules
+=== Headers
+
+Header lines look like something you would see out of a wiki.
+
+  = Header 1 =
+  == Header 2 ==
+  = Another Header 1 =
+  
+Header 1 is the largest and highest header. All text after it, aside from
+another 1-header, will be considered a sub-block. In the example 
+"Header 1" and "Another Header 1" are the two top-level blocks. "Header 2" is
+a child of "Header 1".
+
+=== Indentation
+
+Indentation also forms blocks.
+
+  = Header 1 =
+  == Header 2 ==
+    Sub block of header 2.
+      Sub block of the preceding line.
+    Another block below header 2.
+  = Another Header 1 =
+
+In the above example Header 2 has 1 sub-block because there is an indentation
+of 2-spaces with an intermediate indentation of 4-spaces. That 4-space line
+is bundled into a subblock to the 2-space indented block of text.
+
+The only ways to break out of this 2-indent text is to:
+
+1. Put in an empty line.
+2. Put in a header.
+3. Indent more shallowly, such as a 1-space line.
+
+=== Tags
+
+Lines beginning with [tag1] [tag2] are considered to have tags
++tag1+ and +tag2+. For example:
+
+  Block1
+  [block 1 tag] [example]
+  
+  [this is tag] Block2 [not a tag]
+  [block 2 tag] [example]
+  
+Notice, tag names may have spaces. Both blocks are tagged with +example+.
+And finally, <code>not a tag</code> is, well, not a tag. It does not start a line.
+
+Also note that you can't tag header blocks directly because the header line
+must start with = and tag lines must begin with [. Blocks inherit all their 
+child blocks' tags, though, so finding header blocks by tags is still possible.
