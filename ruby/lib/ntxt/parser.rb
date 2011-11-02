@@ -1,6 +1,5 @@
 require 'ntxt/block'
 require 'ntxt/ntxt'
-require 'pp'
 
 module Ntxt
   class Parser
@@ -32,15 +31,19 @@ module Ntxt
       # Shift the state to the next line and return that line.
       # If this goes out of bounds of the text nil is returned.
       def nextLine
-        nLine = @line+1
-        if nLine < @lineEnd
-          @offset = @offset + @lines[@line].length + 1
-          @line = nLine
-          @lines[nLine]
-        else
-          @line = @lineEnd
+      
+        # If we are already past the end, return nil, do nothing.
+        if @line >= @lineEnd
           nil
-        end
+          
+        # Otherwise we are updating some state.
+        else
+          @offset = @offset + @lines[@line].length + 1
+          @line = @line + 1
+          
+          # Recheck if we are inside the array and return nil if we are not.
+          (@line < @lineEnd) ? @lines[@line] : nil
+        end        
       end # nextLine
       
       # Shift the state to the previous line and return that line.
@@ -177,18 +180,20 @@ module Ntxt
                         state.block,
                         state.start,
                         state.offset)
-                              
+
+      id = rand(100)
+      
       # Position state at the ed of the block.
       # Blocks are ended by empty lines or lines with the = starting them.
       while line
-      
+
         break unless line =~ /^(\s*)([^=\s].*)$/
         
         nextIndentLevel = $~[1].length
         nextLine = $~[2]
         
         break if nextIndentLevel < indentLevel
-        
+
         if nextIndentLevel > indentLevel
           # Advance to the next line after parsing a subblock.
           subState = State.new(
@@ -209,7 +214,6 @@ module Ntxt
         end # if nextIndentLevel > indentLevel
         
       end # while line
-
       block.offset = state.offset
       state.consume
     end # parseIndent(indentLevel, text)

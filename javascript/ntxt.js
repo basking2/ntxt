@@ -19,16 +19,15 @@
           } 
         }
         this.nextLine = function() {
-          var nLine = this.line + 1
-          
-          if ( nLine < this.lineEnd ) {
-            this.offset = this.offset + this.lines[this.line].length + 1
-            this.line = nLine
-            return this.lines[nLine]
-          } else {
-            this.line = this.lineEnd
+        
+          if (this.line >= this.lineEnd) {
             return null
+          } else {
+            this.offset = this.offset + this.lines[this.line].length + 1
+            this.line = this.line + 1
+            return (this.line < this.lineEnd) ? this.lines[this.line] : null
           }
+            
         }
         
         this.prevLine = function() {
