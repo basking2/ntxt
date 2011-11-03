@@ -38,7 +38,11 @@ toc = {
         var a = document.createElement('a')
         a.name = eleId
         a.id = eleId
-        ele.parentElement.insertBefore(a, ele)
+        if ( ele.parentElement ) {
+          ele.parentElement.insertBefore(a, ele)
+        } else if ( ele.parentNode ) {
+          ele.parentNode.insertBefore(a, ele)
+        }
         //ele.appendChild(a)
       }
                       
