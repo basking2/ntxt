@@ -19,6 +19,7 @@ h6 { font-size: 100%; margin: 0px; padding: 0px; }
 .ntxt_hidden {
   font-style: italic;
   font-weight: bold;
+  color: #a0a0a0;
 }
 
 .ntxt_h {

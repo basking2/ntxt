@@ -39,8 +39,7 @@ function printTree(n, element) {
     },
     function(depth, node) {
       html += '<div class="ntxt ntxt_hidden ntxt_'+depth+'"  name="block_div_plus" '
-              + 'style="display:none;z-index:'+depth+'" '
-              + '>+ '
+              + 'style="display:none;z-index:'+depth+'" >'
               + node.text().substr(0, 20) + '...'
               + '</div>'
       html += '<div class="ntxt ntxt_displayed ntxt_'+depth+'" name="block_div" '
