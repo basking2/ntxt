@@ -3,11 +3,26 @@
 require 'rubygems'
 require 'optparse'
 require 'ntxt'
+require 'yaml'
 
 $configs = {
   :cmd => 'tag',
-  :tag_string => ''
+  :tag_string => '',
+  :filename => "#{ENV['HOME']}/notes.txt"
 }
+
+DEFAULT_CONFIG_FILE="#{ENV['HOME']}/.ntxtrc"
+
+# Create or load a configuration file.
+if File.exists?(DEFAULT_CONFIG_FILE)
+  File.open(DEFAULT_CONFIG_FILE) do |io|
+    $configs.merge!(YAML::load(io))
+  end
+else
+  File.open(DEFAULT_CONFIG_FILE, 'w') do |io|
+    YAML::dump($configs, io)
+  end
+end
 
 OptionParser.new do |opt|
 
@@ -42,9 +57,6 @@ end.parse! ARGV
 
 if ARGV.length > 0
   $configs[:filename] = ARGV.shift
-else
-  puts "No file specified. Exiting"
-  exit 1
 end
 
 # Remove empty lines from blocks and print. Guards against nils and empty lines.
@@ -57,7 +69,12 @@ end
 
 $configs[:tag_string] = ARGV.shift if ARGV.length > 0
 
-ntxt = File.open($configs[:filename]) { |io| Ntxt::Ntxt.new(io.read) }
+begin
+  ntxt = File.open($configs[:filename]) { |io| Ntxt::Ntxt.new(io.read) }
+rescue Errno::ENOENT => e
+  puts "The file #{$configs[:filename]} was not found. Exiting."
+  exit 1
+end
 
 case $configs[:cmd]
 when 'print_tags'
