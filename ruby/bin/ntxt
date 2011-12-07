@@ -34,6 +34,10 @@ OptionParser.new do |opt|
     $configs[:cmd] = 'print'
   end
 
+  opt.on('-e','--edit', 'Edit using $NTXT_EDITOR or $EDITOR.' ) do |v|
+    $configs[:cmd] = 'edit'
+  end
+
   opt.on('-T', '--print_tags', 'Print all tags in the document.') do |v|
     $configs[:cmd] = 'print_tags'
   end
@@ -101,6 +105,15 @@ when 'last'
   ntxt.rootBlock.children[-$configs[:last].. -1].each do |blk|
     puts blk.text
   end
+when 'edit'
+  editor = ENV['NTXT_EDITOR'] || ENV['EDITOR']
+
+  if editor.nil?
+    puts "Environment variable NTXT_EDITOR and EDITOR are not defined."
+  else
+    system("#{editor} \"#{$configs[:filename]}\"")
+  end
+
 when 'trace'
   ntxt.walkText(
     lambda { |txt, depth, block| print txt },
