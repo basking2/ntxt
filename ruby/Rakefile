@@ -27,7 +27,9 @@ spec = Gem::Specification.new do |s|
   s.email = 'basking2@yahoo.com'
   s.homepage = 'http://coffeesgone.wordpress.com'
   s.description = <<EOF
-A collection of tools to assist Sam in coding.
+A library and command line tool for parsing plain text into blocks by
+indentation and a simple wiki-esque == header == notation. Tagging of blocks
+and searching them is also supported.
 EOF
 end
 
