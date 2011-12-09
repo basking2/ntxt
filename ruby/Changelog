@@ -1,3 +1,5 @@
+1.0.4
+  - Fixed description.
 1.0.3
   - Bug Fix. Lines preceeded with equals signs (=) caused an infinite loop
     unless matched with the trailing equals sign to create header.
