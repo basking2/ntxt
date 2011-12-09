@@ -167,7 +167,10 @@
         // Blocks are ended by empty lines or lines with = starting them.
         while ( line != null ) {
           
-          var m = line.match(/^(\s*)([^=\s].*)$/)
+          if (hlevel(line))
+              break
+              
+          var m = line.match(/^(\s*)(..*)$/)
           
           // Found a header. Break.
           if ( m == null ) {

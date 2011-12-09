@@ -239,21 +239,20 @@ module Ntxt
     def parseIndent(indentLevel, text)
       state = @stack[-1]
       line = state.currLine
-      
+
       # Build the block. Update the offset.
       block = Block.new(state.block.ntxt,
                         state.block,
                         state.start,
                         state.offset)
 
-      id = rand(100)
-      
       # Position state at the ed of the block.
       # Blocks are ended by empty lines or lines with the = starting them.
       while line
 
-        break unless line =~ /^(\s*)([^=\s].*)$/
-        
+        break if Parser::hlevel(line)
+        break unless line =~ /^(\s*)(..*)$/
+
         nextIndentLevel = $~[1].length
         nextLine = $~[2]
         
