@@ -7,7 +7,7 @@ to search their text in a slightly more structured way than +grep+ 'ing.
 
 Any tags found in a block are extracted and the block is _tagged_ with them.
 All parent blocks also receive the tags of their child blocks. Thus, the 
-root block is tagged with all tags occuring in the document.
+root block is tagged with all tags occurring in the document.
 
 == Format Rules
 === Headers
@@ -40,13 +40,15 @@ is bundled into a subblock to the 2-space indented block of text.
 
 The only ways to break out of this 2-indent text is to:
 
-1. Put in an empty line.
-2. Put in a header.
-3. Indent more shallowly, such as a 1-space line.
+1. Put in an empty line. That is, a line with no indenting. A line with only
+   two spaces on it will be seen as a continuation of the 2-indent block.
+2. Indent more shallowly, such as a 1-space line.
+3. Put in a header.
 
 === Tags
 
-Lines beginning with [tag1] [tag2] are considered to have tags
+Lines beginning with [tag1] [tag2] (ignoring whitespace) are considered to 
+have tags
 +tag1+ and +tag2+. For example:
 
   Block1
@@ -61,3 +63,4 @@ And finally, <code>not a tag</code> is, well, not a tag. It does not start a lin
 Also note that you can't tag header blocks directly because the header line
 must start with = and tag lines must begin with [. Blocks inherit all their 
 child blocks' tags, though, so finding header blocks by tags is still possible.
+

@@ -46,6 +46,10 @@ div.ntxt_0 {
   /* background: rgba(0,0,255,0.03); */
 }
 
+#toc { 
+  display: none;
+}
+
 #controller {
   position: fixed; /* Could be fixed or absolute. */
   right: -0;

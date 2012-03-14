@@ -3,6 +3,7 @@ var tagFilter = ''
 var textFilter = ''
 
 function wikiText(txt) {
+  var txt
   txt = txt.replace(/^\s*====== (.*) ======/g, '<h6 class="ntxt_h">$1</h6>')
   txt = txt.replace(/^\s*===== (.*) =====/g, '<h5 class="ntxt_h">$1</h5>')
   txt = txt.replace(/^\s*==== (.*) ====/g, '<h4 class="ntxt_h">$1</h4>')
@@ -54,7 +55,7 @@ function printTree(n, element) {
       html += '</div>'
     } )
     
-  element.innerHTML = html
+  element.html(html)
   
   function leftBorderToggle(e) {
     if ( e.ctrlKey ) {
@@ -102,7 +103,7 @@ function searchBlocks(){
   }
   
   
-  printTree(ntxtTree, document.getElementById('ntxtDiv'));
+  printTree(ntxtTree, $('#ntxtDiv'));
 }
 
 
@@ -130,18 +131,20 @@ function toggleVisibility(event) {
 }
 
 function loadNtxt() {
-  ntxtTree = ntxt.fetchNtxt(document.getElementById('ntxtFile').value)
+  ntxtTree = ntxt.fetchNtxt($('#ntxtFile').val())
+  printTree(ntxtTree, $('#ntxtDiv'));
+
+  if ( ! ( toc && toc.buildToc ) ) {
+    console.error("toc.js is required to be included before this js.")
+  } else {           
+    toc.buildToc('toc')
+  }
 }
 
-window.addEventListener('load', function(e) {
+$(document).ready(function(){
   
-  loadNtxt()
-  
-  document.getElementById('ntxtFile').addEventListener('change', loadNtxt)
 
-  printTree(ntxtTree, document.getElementById('ntxtDiv'));
-  
-  document.getElementById('searchInput').focus()
+  loadNtxt()
 
   var tagHash = {}
   
@@ -149,34 +152,34 @@ window.addEventListener('load', function(e) {
     tagHash[ntxtTree.rootBlock.tags[i]]=1
   }
   
-  document.getElementById('allTags').innerHTML = 
-    Object.keys(tagHash).sort().join(', ')
+  $('#allTags').html(Object.keys(tagHash).sort().join(', '))
 
-  document.addEventListener('keypress', function(e) {
+  $('#searchInput').focus()
+  $('#ntxtFile').change(loadNtxt)
+  $('#searchInput').keyup(searchBlocks)
+
+  $(document).keypress(function(e) {
+    var c = String.fromCharCode(e.which)
+
+    if ( c == 't' && e.ctrlKey && e.altKey) {
+        if ($('#toc').css('display') == 'none') {
+            $('#toc').css('display', 'inline')
+        } else {
+            $('#toc').css('display', 'none')
+        }
+        e.preventDefault()
+    }
 
     // Do not show help when the user touches input tags.
     if ( e.target.tagName == 'INPUT' ) {
       return
     }
 
-    var c = String.fromCharCode(e.keyCode)
-
     if ( c == '?' ) {
-      alert('help');
+      alert('help menu');
     }
-  } ) // document.addEventListener
+  } ) // $(document).keypress(...)
   
-  document.getElementById( 'searchInput' ).
-           addEventListener('keyup', function() {
-             searchBlocks()
-           } )
   
-  if ( ! ( toc && toc.buildToc ) ) {
-    console.error("toc.js is required to be included before this js.")
-  } else {           
-    // FIXME - make this conditional / popup dialog?
-    //toc.buildToc('toc')
-  }
-
 })
 

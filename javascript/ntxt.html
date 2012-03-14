@@ -1,6 +1,7 @@
 <html>
 <head>
   <title>Notes</title>
+
   <!-- Style -->
   <link rel='stylesheet' type='text/css' href='ntxt.css' />
   
@@ -8,8 +9,11 @@
   <script src="ntxt.js" type="text/javascript"></script>
   
   <!-- Build a table of contents. -->
-  <script type="text/javascript" src="toc.js"></script>
+  <script src="toc.js" type="text/javascript"></script>
   
+  <!-- jQuery. -->
+  <script src="jquery-1.7.1.min.js" type="text/javascript"></script>
+
   <!-- View logic. Requires TOC. -->
   <script src="ntxt_view.js" type="text/javascript"></script>
 
@@ -17,6 +21,7 @@
 <body>
 
 <a name="top">&nbsp;</a>
+<div id="toc"></div>
 
 <div id='controller'>
   
@@ -31,7 +36,7 @@
   <input type='text' id='searchInput' />
   File:<select id='ntxtFile'>
     <option value='n.txt'>n.txt</option>
-    <option value='http://dl.dropbox.com/u/24178519/ndemo/n.txt'>Dropbox n.txt</option>
+    <option value='n2.txt'>n2.txt</option>
   </select>
 </div>
 
