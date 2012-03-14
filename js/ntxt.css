@@ -24,6 +24,11 @@ h6 { font-size: 100%; margin: 0px; padding: 0px; }
 
 .ntxt_h {
   font-family: "Arial";
+  border-top-left-radius:0.5em;
+  border-top: 1px solid #a0a0a0;
+  border-left: 1px solid #a0a0a0;
+  padding: 0.5em;
+  background:
 }
 
 pre.ntxt { 
@@ -71,5 +76,6 @@ div.ntxt_0 {
   /* Pad the very bottom so our controller never obscures text. */
   padding-bottom: 3em;
   padding: 1em;
+  border-radius:0.5em;
 }
 
