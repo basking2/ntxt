@@ -1,15 +1,15 @@
 body {
   font-family: Arial, "Sans";
   font-size: 12px;
-  background: #a0a0a0;
+  background: #e0e0ef;
 }
 
-h1 { font-size: 120%; margin: 0px; padding: 0px; color: #0000a0; }
-h2 { font-size: 115%; margin: 0px; padding: 0px; color: #0000a0; }
-h3 { font-size: 110%; margin: 0px; padding: 0px; color: #0000a0; }
-h4 { font-size: 105%; margin: 0px; padding: 0px; color: #0000a0; }
-h5 { font-size: 100%; margin: 0px; padding: 0px; color: #0000a0; }
-h6 { font-size: 100%; margin: 0px; padding: 0px; color: #0000a0; }
+h1 { font-size: 120%; margin: 0px; padding: 0px; color: #000070; }
+h2 { font-size: 115%; margin: 0px; padding: 0px; color: #000070; }
+h3 { font-size: 110%; margin: 0px; padding: 0px; color: #000070; }
+h4 { font-size: 105%; margin: 0px; padding: 0px; color: #000070; }
+h5 { font-size: 100%; margin: 0px; padding: 0px; color: #000070; }
+h6 { font-size: 100%; margin: 0px; padding: 0px; color: #000070; }
 
 .ntxt {
   margin: 0em;
@@ -25,8 +25,8 @@ h6 { font-size: 100%; margin: 0px; padding: 0px; color: #0000a0; }
 .ntxt_h {
   font-family: Arial, "Sans";
   border-top-left-radius:0.5em;
-  border-top: 1px solid #0000a0;
-  border-left: 1px solid #0000a0;
+  border-top: 1px solid #000070;
+  border-left: 1px solid #000070;
   padding: 0.5em;
   background:
 }
@@ -83,10 +83,6 @@ div.ntxt {
   padding: 1em;
 }
 
-#allTagsPanel { 
-  margin-bottom: 1em;
-}
-
 #allTagsLabel { 
   font-weight: bold;
 }
@@ -95,8 +91,22 @@ div.ntxt {
   display: inline-block;
 }
 
+#allTagsPanel { 
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+  border: 2px solid #003399;
+  box-shadow: 5px 5px 5px #8888c0;
+}
+
 #ntxtDiv {
   /* Pad the very bottom so our controller never obscures text. */
   padding-bottom: 3em;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #003399;
+  box-shadow: 5px 5px 5px #8888c0;
 }
 
