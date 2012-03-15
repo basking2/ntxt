@@ -14,6 +14,17 @@ function wikiText(txt) {
   return txt
 }
 
+function stripHeaderMarks(txt) {
+  var txt
+  txt = txt.replace(/^\s*====== (.*) ======/g, '$1')
+  txt = txt.replace(/^\s*===== (.*) =====/g, '$1')
+  txt = txt.replace(/^\s*==== (.*) ====/g, '$1')
+  txt = txt.replace(/^\s*=== (.*) ===/g, '$1')
+  txt = txt.replace(/^\s*== (.*) ==/g, '$1')
+  txt = txt.replace(/^\s*= (.*) =/g, '$1')
+  return txt
+}
+
 function printTree(n, element) {
   
   var html = ""
@@ -27,8 +38,7 @@ function printTree(n, element) {
       
       txt = wikiText(txt)
       
-      if (tagFilter.length > 0 
-         && node.tags.join(',').indexOf(tagFilter) >= 0) 
+      if (tagFilter.length > 0 && node.tags.join(',').indexOf(tagFilter) >= 0) 
       {
         html += txt
       } else if (textFilter.length > 0 && txt.indexOf(textFilter) >= 0) {
@@ -41,7 +51,7 @@ function printTree(n, element) {
     function(depth, node) {
       html += '<div class="ntxt ntxt_hidden ntxt_'+depth+'"  name="block_div_plus" '
               + 'style="display:none;z-index:'+depth+'" >'
-              + node.text().substr(0, 20) + '...'
+              + stripHeaderMarks(node.text()).substr(0, 20) + '...'
               + '</div>'
       html += '<div class="ntxt ntxt_displayed ntxt_'+depth+'" name="block_div" '
               + 'title="Tags: '+node.tags.join(', ')+'" '
@@ -134,6 +144,7 @@ function loadNtxt() {
   ntxtTree = ntxt.fetchNtxt($('#ntxtFile').val())
   printTree(ntxtTree, $('#ntxtDiv'));
 
+  // Build the table of contents.
   if ( ! ( toc && toc.buildToc ) ) {
     console.error("toc.js is required to be included before this js.")
   } else {           
@@ -143,7 +154,6 @@ function loadNtxt() {
 
 $(document).ready(function(){
   
-
   loadNtxt()
 
   var tagHash = {}
@@ -163,10 +173,11 @@ $(document).ready(function(){
 
     if ( c == 't' && e.ctrlKey && e.altKey) {
         if ($('#toc').css('display') == 'none') {
-            $('#toc').css('display', 'inline')
+          $('#toc').css('display', 'inline')
         } else {
-            $('#toc').css('display', 'none')
+          $('#toc').css('display', 'none')
         }
+
         e.preventDefault()
     }
 
@@ -176,7 +187,11 @@ $(document).ready(function(){
     }
 
     if ( c == '?' ) {
-      alert('help menu');
+      if ($('#help').css('display') == 'none') {
+        $('#help').fadeIn(100)
+      } else {
+        $('#help').fadeOut(100)
+      }
     }
   } ) // $(document).keypress(...)
   
