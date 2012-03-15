@@ -155,15 +155,31 @@ function loadNtxt() {
 }
 
 function showAll(ev) {
-  $.each($('.ntxt_hidden'), function(idx, val) { $(val).hide() } )
-  $.each($('.ntxt_displayed'), function(idx, val) { $(val).show() } )
+  $.each($('div.ntxt_hidden'), function(idx, val) { 
+    $(val).css('display', 'none') } )
+  $.each($('div.ntxt_displayed'), function(idx, val) { 
+    $(val).css('display', 'block') } )
+
+  /* Always show level 0. */
+  $('#block_div_0').css('display', 'block')
+  $('#block_div_0_plus').css('display', 'none')
+
+  /* Prevent default (navigation) and propagation. */
   ev.preventDefault()
   ev.stopPropagation()
 }
 
 function hideAll(ev) {
-  $.each($('.ntxt_hidden'), function(idx, val) { $(val).show() } )
-  $.each($('.ntxt_displayed'), function(idx, val) { $(val).hide() } )
+  $.each($('div.ntxt_hidden'), function(idx, val) { 
+    $(val).css('display', 'block') } )
+  $.each($('div.ntxt_displayed'), function(idx, val) { 
+    $(val).css('display', 'none') } )
+
+  /* Always show level 0. */
+  $('#block_div_0').css('display', 'block')
+  $('#block_div_0_plus').css('display', 'none')
+
+  /* Prevent default (navigation) and propagation. */
   ev.preventDefault()
   ev.stopPropagation()
 }
