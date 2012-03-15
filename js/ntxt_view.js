@@ -154,6 +154,20 @@ function loadNtxt() {
   }
 }
 
+function showAll(ev) {
+  $.each($('.ntxt_hidden'), function(idx, val) { $(val).hide() } )
+  $.each($('.ntxt_displayed'), function(idx, val) { $(val).show() } )
+  ev.preventDefault()
+  ev.stopPropagation()
+}
+
+function hideAll(ev) {
+  $.each($('.ntxt_hidden'), function(idx, val) { $(val).show() } )
+  $.each($('.ntxt_displayed'), function(idx, val) { $(val).hide() } )
+  ev.preventDefault()
+  ev.stopPropagation()
+}
+
 $(document).ready(function(){
   
   loadNtxt()
@@ -169,6 +183,9 @@ $(document).ready(function(){
   $('#searchInput').focus()
   $('#ntxtFile').change(loadNtxt)
   $('#searchInput').keyup(searchBlocks)
+
+  $('#showAll').click(showAll)
+  $('#hideAll').click(hideAll)
 
   $(document).keypress(function(e) {
     var c = String.fromCharCode(e.which)
