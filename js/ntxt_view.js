@@ -51,7 +51,9 @@ function printTree(n, element) {
     function(depth, node) {
       html += '<div class="ntxt ntxt_hidden ntxt_'+depth+'"  name="block_div_plus" '
               + 'style="display:none;z-index:'+depth+'" >'
-              + stripHeaderMarks(node.text()).substr(0, 20) + '...'
+              + stripHeaderMarks(node.text()).
+                replace(/\n/g, '').
+                substr(0, 20) + '...'
               + '</div>'
       html += '<div class="ntxt ntxt_displayed ntxt_'+depth+'" name="block_div" '
               + 'title="Tags: '+node.tags.join(', ')+'" '
@@ -186,13 +188,12 @@ $(document).ready(function(){
       return
     }
 
-    if ( c == '?' ) {
-      if ($('#help').css('display') == 'none') {
-        $('#help').fadeIn(100)
-      } else {
-        $('#help').fadeOut(100)
-      }
+    if ( c == '?' && $('#help').css('display') == 'none') {
+      $('#help').fadeIn(100)
+    } else if ( $('#help').css('display') != 'none') {
+      $('#help').fadeOut(100)
     }
+
   } ) // $(document).keypress(...)
   
   
