@@ -1,7 +1,7 @@
 body {
   font-family: Arial, "Sans";
   font-size: 12px;
-  background: #e0e0ef;
+  background: #b0b0c0;
 }
 
 h1 { font-size: 120%; margin: 0px; padding: 0px; color: #000070; }
@@ -24,7 +24,7 @@ h6 { font-size: 100%; margin: 0px; padding: 0px; color: #000070; }
 
 .ntxt_h {
   font-family: Arial, "Sans";
-  border-top-left-radius:0.5em;
+  border-top-left-radius:0.3em;
   border-top: 1px solid #000070;
   border-left: 1px solid #000070;
   padding: 0.5em;
@@ -79,7 +79,7 @@ div.ntxt {
 
 .niceBox { 
   background: white;
-  border-radius:0.5em;
+  border-radius:0.3em;
   padding: 1em;
 }
 
@@ -97,7 +97,7 @@ div.ntxt {
   margin-right: auto;
   width: 800px;
   border: 2px solid #003399;
-  box-shadow: 5px 5px 5px #8888c0;
+  box-shadow: 2px 5px 5px #8888c0;
 }
 
 #ntxtDiv {
@@ -107,6 +107,6 @@ div.ntxt {
   margin-left: auto;
   margin-right: auto;
   border: 2px solid #003399;
-  box-shadow: 5px 5px 5px #8888c0;
+  box-shadow: 2px 5px 5px #8888c0;
 }
 
