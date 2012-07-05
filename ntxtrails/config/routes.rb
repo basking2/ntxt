@@ -6,6 +6,11 @@ Ntxtrails::Application.routes.draw do
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
 
+  match 'ntxt', :action => :index, :controller => :ntxt
+  match 'ntxt/list', :via => :get, :controller => :ntxt, :action => :list
+  match 'ntxt/:id', :via => :get, :controller => :ntxt, :action => :get
+  match 'ntxt/:id', :via => :put, :controller => :ntxt, :action => :put
+
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
