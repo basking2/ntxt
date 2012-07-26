@@ -60,9 +60,21 @@ module Ntxt
     end
     
     # Add a tag to this block and all ancestor blocks.
-    def addTag(tag)
-      @tags[tag] += 1
-      @parent.addTag(tag) if @parent
+    #
+    # A tag added to a block does not increment that block's tag count
+    # for the added tag. A tag added to the parent of a tagged block has
+    # it's tag count incremented by 1.
+    #
+    # Thus, if a tag count = 0, then this block owns the tag.
+    # 
+    # If a tag count = 1. there is 1 child block with the given tag.
+    #
+    # [tag] The tag to add.
+    # [inc] The increment value. This should always be 0
+    #       for client code.
+    def addTag(tag, inc=0)
+      @tags[tag] += inc
+      @parent.addTag(tag, 1) if @parent
     end
 
     # Return the text slice that this block refers to.
