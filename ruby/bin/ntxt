@@ -55,13 +55,14 @@ OptionParser.new do |opt|
     $configs[:tag_string] = v
   end
   
-  opt.on('--tm=String', 'Tag printing mode. path, leaf, or parent.') do |v|
-    unless v =~ /^(path|leaf|parent)$/
-      puts "Tag mode (--tm) must be path, left or parent. Was #{v}."
-      exit
-    end
-
-    $configs[:tag_print_mode] = v
+  opt.on('--path', 'Print the path down the tree.') do |v|
+    $configs[:tag_print_mode] = 'path'
+  end
+  opt.on('--parent', 'Print the whole parent block.') do |v|
+    $configs[:tag_print_mode] = 'parent'
+  end
+  opt.on('--leaf', 'Print only the tagged block.') do |v|
+    $configs[:tag_print_mode] = 'leaf'
   end
 
   opt.on('-l', '--last=[Integer]', 
