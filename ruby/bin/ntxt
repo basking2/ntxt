@@ -15,10 +15,10 @@ $configs = {
 
   # Tag printing mode describes how tags are printed.
   :tag_print_mode => 'path',
-  :filename => "#{ENV['HOME']}/notes.txt"
+  :filename => File.join(ENV['HOME'], "notes.txt")
 }
 
-DEFAULT_CONFIG_FILE="#{ENV['HOME']}/.ntxtrc"
+DEFAULT_CONFIG_FILE=File.join(ENV['HOME'], ".ntxtrc")
 
 # Create or load a configuration file.
 if File.exists?(DEFAULT_CONFIG_FILE)
@@ -89,29 +89,67 @@ def printNonEmpty(txt)
 end
 
 module TagPrintModes
+
+  def self.each_matched_tag(block, tag_string)
+    block.
+      tags.
+      keys.
+      # Filter the tags we want.
+      select { |x| x.index(tag_string) }.
+
+      # Process the tags we've selected.
+      each { |tag| yield tag }
+  end
+
   # Only print the block if the tag count == 0.
-  def self.leaf(txt, block, tag)
-    if block.tags.member?(tag) and block.tags[tag] == 0
-      printNonEmpty(txt)
-    end
+  def self.leaf(ntxt, tag_string)
+    ntxt.walkText(
+      # Processing a block
+      lambda { |txt, depth, block| },
+      lambda do |depth, block|
+        each_matched_tag(block, tag_string) do |tag|
+          printNonEmpty(block.text) if block.tags[tag] == 0
+        end
+      end,
+      lambda { |depth, block| } )
   end
 
   # Print the entire parent block if the tag count == 0
   # and the parent tag count == 1. Otherwise, print txt.
-  def self.parent(txt, block, tag)
-    if block.tags[tag] == 0 and block.parent && block.parent.tags[tag] == 1
-      printNonEmpty(block.parent.text)
-    else
-      printNonEmpty(txt)
-    end
+  def self.parent(ntxt, tag_string)
+    ntxt.walkText(
+      # Processing a block
+      lambda { |txt, depth, block| },
+      lambda do |depth, block|
+        each_matched_tag(block, tag_string) do |tag|
+          if block.tags[tag] == 0 and
+             block.parent and 
+             block.parent.tags[tag] == 1
+            printNonEmpty(block.parent.text)
+          end
+        end
+      end,
+      lambda { |depth, block| } )
   end
 
   # Print txt always. Effectively this presents a pruned 
   # text path of text that is tagged.
   #
   # This is essentially the Ntxt::Ntxt.walkText algorithm.
-  def self.path(txt, block, tag)
-    printNonEmpty(txt)
+  def self.path(ntxt, tag_string)
+    ntxt.walkText(
+      # Processing a block
+      lambda do |txt, depth, block|
+        each_matched_tag(block, tag_string) do |tag|
+          printNonEmpty(txt) if block.tags[tag] > 0
+        end
+      end,
+      lambda do |depth, block|
+        each_matched_tag(block, tag_string) do |tag|
+          printNonEmpty(block.text) if block.tags[tag] == 0
+        end
+      end,
+      lambda { |depth, block| } )
   end
 end
 
@@ -129,20 +167,7 @@ when 'print_tags'
   # Notice that we are re-wrapping the tags back into square brackets.
   puts "[#{ntxt.rootBlock.tags.keys.sort.join('] [')}]"
 when 'tag'
-  ntxt.walkText(
-    lambda { |txt, depth, block|
-      block.tags.keys.
-        # Filter the tags we want.
-        select do |x|
-          x.index($configs[:tag_string])
-
-        # Process the tags we've selected.
-        end.each do |tag|
-          TagPrintModes.send($configs[:tag_print_mode], txt, block, tag)
-        end
-    },
-    lambda { |depth, block| },
-    lambda { |depth, block| } )
+  TagPrintModes.send($configs[:tag_print_mode], ntxt, $configs[:tag_string])
 when 'search'
   ntxt.walkText(
     lambda { |txt, depth, block|
