@@ -1,3 +1,15 @@
+1.0.5
+  - Tag printing now prints the entire block of text that a tag is
+    associated with. Previously text of sub-blocks  and text
+    separated by sub-block text was not printed.
+  - Internal change. Tags applied to blocks start counting at 0.
+    This allows an easy method to determine if a tag in an Ntxt::Block
+    is of a child node (tags[tag]>0) or is associated
+    with only that node (tags.member?(tag) && tags[tag]==0).
+  - Added two other methods to print blocks of text found by searching 
+    tags. Leaf and parent. Parent prints the entire parent node (if
+    on exists). Leaf prints only the block of text that has the tag 
+    on it, no parent text snippets.
 1.0.4
   - Fixed description.
 1.0.3
