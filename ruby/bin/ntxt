@@ -32,7 +32,7 @@ else
 end
 
 OptionParser.new do |opt|
-  opt.version="1.0.5"
+  opt.version="1.0.6"
 
   opt.on('--trace', 'Trace through the file printing summaries.' ) do |v|
     $configs[:cmd] = 'trace'
