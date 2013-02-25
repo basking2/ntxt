@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'rake/testtask'
 gem 'rdoc'
 require 'rdoc/rdoc'
@@ -33,7 +33,7 @@ and searching them is also supported.
 EOF
 end
 
-Rake::GemPackageTask.new( spec ) do |pkg|
+Gem::PackageTask.new( spec ) do |pkg|
   pkg.need_tar_bz2 = true
 end
 
