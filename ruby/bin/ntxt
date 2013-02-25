@@ -7,7 +7,7 @@ require 'yaml'
 
 $configs = {
   :cmd => 'last',
-  :last => '1',
+  :last => 1,
   :tag_string => '',
 
   # Replace with command of editor. Otherwise NTXT_EDITOR and EDITOR are used.
@@ -172,7 +172,7 @@ when 'tag'
 when 'search'
   ntxt.walkText(
     lambda { |txt, depth, block|
-      printNonEmpty txt if txt && txt.index( $configs[:search_string])},
+      printNonEmpty txt if txt && txt.index($configs[:search_string])},
     lambda { |depth, block| },
     lambda { |depth, block| } )
 when 'print'
@@ -181,7 +181,7 @@ when 'print'
     lambda { |depth, block| },
     lambda { |depth, block| } )
 when 'last'
-  ntxt.rootBlock.children[-$configs[:last].. -1].each do |blk|
+  ntxt.rootBlock.children[-$configs[:last] .. -1].each do |blk|
     puts blk.text
   end
 when 'edit'
