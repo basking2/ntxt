@@ -206,9 +206,7 @@ module Ntxt
         # Check if we have discovered another block in the form of an hlevel.
         hl = Parser::hlevel(line)
         
-        if hl && hl[0].to_i <= level
-          break
-        end
+        break if hl && hl[0] <= level
         
         line = state.nextLine
       end
