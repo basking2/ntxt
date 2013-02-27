@@ -33,6 +33,8 @@ end
 
 OptionParser.new do |opt|
   opt.version="1.0.6"
+  opt.banner = "Ussage: #{$0} [options] [ntxt file]\n\n" +
+               "Options:\n"
 
   opt.on('--trace', 'Trace through the file printing summaries.' ) do |v|
     $configs[:cmd] = 'trace'
@@ -55,10 +57,10 @@ OptionParser.new do |opt|
     $configs[:tag_string] = v
   end
   
-  opt.on('--path', 'Print the path down the tree.') do |v|
+  opt.on('--path', 'Print the path to tagged block.') do |v|
     $configs[:tag_print_mode] = 'path'
   end
-  opt.on('--parent', 'Print the whole parent block.') do |v|
+  opt.on('--parent', 'Print parent block of a tagged block.') do |v|
     $configs[:tag_print_mode] = 'parent'
   end
   opt.on('--leaf', 'Print only the tagged block.') do |v|
