@@ -1,5 +1,7 @@
 1.0.6-Development
   - Improved help text.
+  - Parser rewrite. Much simpler code.
+  - Support for Markdown style headers.
 1.0.5
   - Tag printing now prints the entire block of text that a tag is
     associated with. Previously text of sub-blocks  and text

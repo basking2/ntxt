@@ -1,0 +1,5 @@
+1.0.0
+  - Starting Changelog.
+  - Improved help text.
+  - Parser rewrite. Much simpler code.
+  - Support for Markdown style headers.
