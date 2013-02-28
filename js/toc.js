@@ -1,10 +1,15 @@
+/**
+ * Simple table of contents generator. 
+ * This does not require any other resources (such as jQuery).
+ */
+TableOfContents = function(id) {
+    document.getElementById(id).innerHTML = this.buildTocHtml();
+};
 
-// Build a table of contents from h tags.
-// This will decorate the document with anchors of the id format toc_id_<num>.
-toc = {
+(function(){
 
   // Return an HTML table.
-  buildTocHtml : function() {
+  this.buildTocHtml = function() {
     var idCount = 0
     var nodeList = []
     var tocTxt = ''
@@ -43,7 +48,6 @@ toc = {
         } else if ( ele.parentNode ) {
           ele.parentNode.insertBefore(a, ele)
         }
-        //ele.appendChild(a)
       }
                       
     }
@@ -53,11 +57,6 @@ toc = {
     }
     
     return tocTxt
-  },
-  
-  // Build and insert the table of contents into an HTML element.
-  buildToc: function(tocId) {
-    document.getElementById(tocId).innerHTML = toc.buildTocHtml()
   }
-}
+}).call(TableOfContents.prototype);
 
