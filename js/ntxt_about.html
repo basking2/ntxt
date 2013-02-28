@@ -25,17 +25,17 @@ h2 {
 }
 </style>
 
-<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="toc.js"></script>
 
 <script type="text/javascript">
   // On load...
   $(document).ready(function(){
-    toc.buildToc('toc')
+    var toc = new TableOfContents('toc');
 
     jQuery.get('LICENSE', function(d) {
         $('#license').html(d)
-    }, 'text')
+    }, 'text');
   })
 </script>
 </head>
