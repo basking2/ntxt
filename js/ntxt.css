@@ -68,6 +68,7 @@ div.ntxt {
   padding: 1em;
   display: none;
   background: rgba(255,255,255,0.95);
+  border-top-left-radius:0.3em;
 }
 
 #controller {

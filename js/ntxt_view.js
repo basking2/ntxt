@@ -1,33 +1,33 @@
 var ntxtTree = null;
-var tagFilter = ''
-var textFilter = ''
+var tagFilter = '';
+var textFilter = '';
 
 function wikiText(txt) {
-  var txt
-  txt = txt.replace(/^\s*====== (.*) ======/g, '<h6 class="ntxt_h">$1</h6>')
-  txt = txt.replace(/^\s*===== (.*) =====/g, '<h5 class="ntxt_h">$1</h5>')
-  txt = txt.replace(/^\s*==== (.*) ====/g, '<h4 class="ntxt_h">$1</h4>')
-  txt = txt.replace(/^\s*=== (.*) ===/g, '<h3 class="ntxt_h">$1</h3>')
-  txt = txt.replace(/^\s*== (.*) ==/g, '<h2 class="ntxt_h">$1</h2>')
-  txt = txt.replace(/^\s*= (.*) =/g, '<h1 class="ntxt_h">$1</h1>')
-  txt = txt.replace(/(https?:\/\/\S*)/g, '<a href="$1">$1</a>')
+  var txt;
+  txt = txt.replace(/^\s*====== (.*) ======/g, '<h6 class="ntxt_h">$1</h6>');
+  txt = txt.replace(/^\s*===== (.*) =====/g, '<h5 class="ntxt_h">$1</h5>');
+  txt = txt.replace(/^\s*==== (.*) ====/g, '<h4 class="ntxt_h">$1</h4>');
+  txt = txt.replace(/^\s*=== (.*) ===/g, '<h3 class="ntxt_h">$1</h3>');
+  txt = txt.replace(/^\s*== (.*) ==/g, '<h2 class="ntxt_h">$1</h2>');
+  txt = txt.replace(/^\s*= (.*) =/g, '<h1 class="ntxt_h">$1</h1>');
+  txt = txt.replace(/(https?:\/\/\S*)/g, '<a href="$1">$1</a>');
   return txt
 }
 
 function stripHeaderMarks(txt) {
-  var txt
-  txt = txt.replace(/^\s*====== (.*) ======/g, '$1')
-  txt = txt.replace(/^\s*===== (.*) =====/g, '$1')
-  txt = txt.replace(/^\s*==== (.*) ====/g, '$1')
-  txt = txt.replace(/^\s*=== (.*) ===/g, '$1')
-  txt = txt.replace(/^\s*== (.*) ==/g, '$1')
-  txt = txt.replace(/^\s*= (.*) =/g, '$1')
+  var txt;
+  txt = txt.replace(/^\s*====== (.*) ======/g, '$1');
+  txt = txt.replace(/^\s*===== (.*) =====/g, '$1');
+  txt = txt.replace(/^\s*==== (.*) ====/g, '$1');
+  txt = txt.replace(/^\s*=== (.*) ===/g, '$1');
+  txt = txt.replace(/^\s*== (.*) ==/g, '$1');
+  txt = txt.replace(/^\s*= (.*) =/g, '$1');
   return txt
 }
 
 function printTree(n, element) {
   
-  var html = ""
+  var html = "";
   
   n.rootBlock.walkText( 
     function(txt, depth, node) {
@@ -36,15 +36,15 @@ function printTree(n, element) {
         return;
       }
       
-      txt = wikiText(txt)
+      txt = wikiText(txt);
       
       if (tagFilter.length > 0 && node.tags.join(',').indexOf(tagFilter) >= 0) 
       {
-        html += txt
+        html += txt;
       } else if (textFilter.length > 0 && txt.indexOf(textFilter) >= 0) {
-        html += txt
+        html += txt;
       } else if (tagFilter.length == 0 && textFilter.length == 0) {
-        html += txt
+        html += txt;
       }
       
     },
@@ -54,64 +54,64 @@ function printTree(n, element) {
               + stripHeaderMarks(node.text()).
                 replace(/\n/g, '').
                 substr(0, 20) + '...'
-              + '</div>'
+              + '</div>';
       html += '<div class="ntxt ntxt_displayed ntxt_'+depth+'" name="block_div" '
               + 'title="Tags: '+node.tags.join(', ')+'" '
               + 'style="display:block;z-index:'+depth+'" '
-              +'">'
+              +'">';
 
-      html += '<pre class="ntxt ntxt_displayed ntxt_'+depth+'">'
+      html += '<pre class="ntxt ntxt_displayed ntxt_'+depth+'">';
     },
     function(depth, node) {
-      html += '</pre>'
-      html += '</div>'
+      html += '</pre>';
+      html += '</div>';
     } )
     
-  element.html(html)
+  element.html(html);
   
   function leftBorderToggle(e) {
     if ( e.ctrlKey ) {
       
       if ( e.currentTarget.style['border-left-style'] == 'solid' ) {
-        e.currentTarget.style['border-left-style'] = 'none'
+        e.currentTarget.style['border-left-style'] = 'none';
       } else {
-        e.currentTarget.style['border-left-style'] = 'solid'
+        e.currentTarget.style['border-left-style'] = 'solid';
       }
       
-      e.stopPropagation()
+      e.stopPropagation();
     }
   }
   
   var a = document.getElementsByName('block_div')
   for ( var i=0; i < a.length; i+=1 ) {
     if ( a[i].tagName == 'DIV' ) {
-      a[i].addEventListener('click', leftBorderToggle)
-      a[i].addEventListener( 'dblclick', toggleVisibility)
-      a[i].id = "block_div_"+i
+      a[i].addEventListener('click', leftBorderToggle);
+      a[i].addEventListener( 'dblclick', toggleVisibility);
+      a[i].id = "block_div_"+i;
     }
   }
-  var a = document.getElementsByName('block_div_plus')
+  var a = document.getElementsByName('block_div_plus');
   for ( var i=0; i < a.length; i+=1 ) {
     if ( a[i].tagName == 'DIV' ) {
-      a[i].addEventListener( 'dblclick', toggleVisibility)
-      a[i].id = "block_div_"+i+"_plus"
+      a[i].addEventListener( 'dblclick', toggleVisibility);
+      a[i].id = "block_div_"+i+"_plus";
     }
   }
 
 }
 
 function searchBlocks(){
-  var v = document.getElementById('searchType').value
-  var i = document.getElementById('searchInput').value
+  var v = document.getElementById('searchType').value;
+  var i = document.getElementById('searchInput').value;
   if ( v == 'tags' ) {
-    textFilter = ''
-    tagFilter = i
+    textFilter = '';
+    tagFilter = i;
   } else if ( v == 'text' ) {
-    textFilter = i
-    tagFilter = ''
+    textFilter = i;
+    tagFilter = '';
   } else {
-    textFilter = ''
-    tagFilter = ''
+    textFilter = '';
+    tagFilter = '';
   }
   
   
@@ -120,115 +120,113 @@ function searchBlocks(){
 
 
 function toggleVisibility(event) {
-  event.stopPropagation()
+  event.stopPropagation();
   //event.preventDefault()
-  var e = event.currentTarget
-  var e2
+  var e = event.currentTarget;
+  var e2;
   
   // Using the event ID, choose the "other" div object. 
   if ( /_plus$/.test( e.id ) ) {
-    e2 = document.getElementById(e.id.substr(0, e.id.length-5))
+    e2 = document.getElementById(e.id.substr(0, e.id.length-5));
   } else {
-    e2 = document.getElementById(e.id+"_plus")
+    e2 = document.getElementById(e.id+"_plus");
   }
   
 
   if ( e.style.display == 'none' ) {
-    e.style.display = 'block'
-    e2.style.display= 'none'
+    e.style.display = 'block';
+    e2.style.display= 'none';
   } else {
-    e.style.display = 'none'
-    e2.style.display = 'block'
+    e.style.display = 'none';
+    e2.style.display = 'block';
   }
 }
 
 function loadNtxt() {
-  ntxtTree = ntxt.fetchNtxt($('#ntxtFile').val())
-  printTree(ntxtTree, $('#ntxtDiv'));
+  ntxtTree = ntxt.fetchNtxt($('#ntxtFile').val());
+  printTree(ntxtTree, $('#ntxtDiv'));;
 
   // Build the table of contents.
   if ( ! ( toc && toc.buildToc ) ) {
-    console.error("toc.js is required to be included before this js.")
+    console.error("toc.js is required to be included before this js.");
   } else {           
-    toc.buildToc('toc')
+    toc.buildToc('toc');
   }
 }
 
 function showAll(ev) {
   $.each($('div.ntxt_hidden'), function(idx, val) { 
-    $(val).css('display', 'none') } )
+    $(val).css('display', 'none'); } );
   $.each($('div.ntxt_displayed'), function(idx, val) { 
-    $(val).css('display', 'block') } )
+    $(val).css('display', 'block'); } );
 
   /* Always show level 0. */
-  $('#block_div_0').css('display', 'block')
-  $('#block_div_0_plus').css('display', 'none')
+  $('#block_div_0').css('display', 'block');
+  $('#block_div_0_plus').css('display', 'none');
 
   /* Prevent default (navigation) and propagation. */
-  ev.preventDefault()
-  ev.stopPropagation()
+  ev.preventDefault();
+  ev.stopPropagation();
 }
 
 function hideAll(ev) {
   $.each($('div.ntxt_hidden'), function(idx, val) { 
-    $(val).css('display', 'block') } )
+    $(val).css('display', 'block'); } );
   $.each($('div.ntxt_displayed'), function(idx, val) { 
-    $(val).css('display', 'none') } )
+    $(val).css('display', 'none'); } );
 
   /* Always show level 0. */
-  $('#block_div_0').css('display', 'block')
-  $('#block_div_0_plus').css('display', 'none')
+  $('#block_div_0').css('display', 'block');
+  $('#block_div_0_plus').css('display', 'none');
 
   /* Prevent default (navigation) and propagation. */
-  ev.preventDefault()
-  ev.stopPropagation()
+  ev.preventDefault();
+  ev.stopPropagation();
 }
 
 $(document).ready(function(){
   
-  loadNtxt()
+  loadNtxt();
 
-  var tagHash = {}
+  var tagHash = {};
   
-  for( var i in ntxtTree.rootBlock.tags ) {
-    tagHash[ntxtTree.rootBlock.tags[i]]=1
+  for (var i in ntxtTree.rootBlock.tags) {
+    tagHash[ntxtTree.rootBlock.tags[i]]=1;
   }
   
-  $('#allTags').html(Object.keys(tagHash).sort().join(', '))
+  $('#allTags').html(Object.keys(tagHash).sort().join(', '));
 
-  $('#searchInput').focus()
-  $('#ntxtFile').change(loadNtxt)
-  $('#searchInput').keyup(searchBlocks)
+  $('#searchInput').focus();
+  $('#ntxtFile').change(loadNtxt);
+  $('#searchInput').keyup(searchBlocks);
 
-  $('#showAll').click(showAll)
-  $('#hideAll').click(hideAll)
+  $('#showAll').click(showAll);
+  $('#hideAll').click(hideAll);
 
   $(document).keypress(function(e) {
-    var c = String.fromCharCode(e.which)
+    var c = String.fromCharCode(e.which);
 
     if ( c == 't' && e.ctrlKey && e.altKey) {
         if ($('#toc').css('display') == 'none') {
-          $('#toc').css('display', 'inline')
+          $('#toc').css('display', 'inline');
         } else {
-          $('#toc').css('display', 'none')
+          $('#toc').css('display', 'none');
         }
 
-        e.preventDefault()
+        e.preventDefault();
     }
 
     // Do not show help when the user touches input tags.
     if ( e.target.tagName == 'INPUT' ) {
-      return
+      return;
     }
 
     if ( c == '?' && $('#help').css('display') == 'none') {
-      $('#help').fadeIn(100)
+      $('#help').fadeIn(100);
     } else if ( $('#help').css('display') != 'none') {
-      $('#help').fadeOut(100)
+      $('#help').fadeOut(100);
     }
 
   } ) // $(document).keypress(...)
-  
-  
-})
+});
 
