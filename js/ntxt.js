@@ -9,13 +9,26 @@ ntxt = {
     }
 };
 
-// Block constructor
-// ntxtObj the root Ntxt object.
-// parentBlock the parent Block object.
-// startTxt the starting offset in ntxtObj.text where this starts
-// stopTxt the offset in ntxtObje.text after the startTxt position.
-// The block of text submitted must be a valid block, meaning, it may
-// ONLY contain subblocks.
+/**
+ * Block constructor
+ * ntxtObj the root Ntxt object.
+ * parentBlock the parent Block object.
+ * startTxt the starting offset in ntxtObj.text where this starts
+ * stopTxt the offset in ntxtObje.text after the startTxt position.
+ *
+ * The block of text submitted must be a valid block, meaning, it may
+ * ONLY contain subblocks.
+ *
+ * A Block contains the members:
+ *   - children - a list of child blocks.
+ *   - tags - a list of tags.
+ *   - start - the index to the block's text start.
+ *   - offset - the length of the block of text from start.
+ *   - ntxt - the NTxt object containing the text.
+ *   - header - the header level. 0 is no header. 1-6 are valid levels.
+ *   - indent - the indentation of this block's text, if any. 0 if none.
+ *   - parent - the parent block, if any.
+ */
 ntxt.Block = function(ntxtObj, parentBlock, startTxt, stopTxt) {
     
     // Ensure that this function is only ever called as a constructor.
@@ -28,6 +41,7 @@ ntxt.Block = function(ntxtObj, parentBlock, startTxt, stopTxt) {
     this.start = startTxt || 0;
     this.offset = stopTxt || ntxtObj.text.length;
     this.ntxt = ntxtObj;
+    this.header = 0;
     this.parent = parentBlock;
 
     // Set the indent to possibly non-zero if there is a parent block.
@@ -119,249 +133,168 @@ ntxt.Ntxt = function(txt) {
     
     this.text = txt;
       
-    this.rootBlock = (new ntxt.BlockParser).parse(this);
+    this.rootBlock = (new ntxt.BlockParser()).parse(this);
 
 }; // Close Ntxt.
     
-
-ntxt.State = function (lines, block, lineStart, start, lineEnd) {
-    this.lines = lines;         // array of lines.
-    this.block = block;         // context.
-    this.lineStart = lineStart; // start of frame.
-    this.line = lineStart;      // current line.
-    this.lineEnd = lineEnd;     // end of frame.
-    this.start = start;         // starting character
-    this.offset = 0;            // current character offset from start.
-}; // State
-
-// ntxt.State definition.
-(function(){
-    this.currLine = function() {
-        if (this.line < this.lineEnd && this.line >= this.lineStart) {
-            return this.lines[this.line];
-        } else {
-            return undefined;
-        } 
-    };
-
-    this.nextLine = function() {
-        
-        if (this.line >= this.lineEnd) {
-            return undefined;
-        } else {
-            this.offset = this.offset + this.lines[this.line].length + 1;
-            this.line = this.line + 1;
-            return (this.line < this.lineEnd) ? this.lines[this.line] : undefined;
-        }
-    };
-
-    this.prevLine = function() {
-        if ( this.line < this.lineStart ) {
-            return undefined;
-        } else {
-            var nLine = this.line - 1;
-            this.offset = this.offset - this.lines[nLine].length - 1;
-            this.line = nLine;
-            return this.lines[nLine];
-        }
-    };
-        
-    // Shift our starting points to our current points. This
-    // effectively consumes text.
-    this.consume = function() {
-        this.start = this.start + this.offset;
-        this.offset = 0;
-        this.lineStart = this.line;
-    };
-        
-    this.toString = function() {
-        return  "lineStart: "+this.lineStart+
-                ", lineEnd: " +this.lineEnd+
-                ", line: "+this.line+
-                ", start: "+this.start+
-                ", offset: "+this.offset;
-    };
-        
-    // Seek this stat's position to the given state's position.
-    this.seek = function(state) {
-        this.line = state.line;
-        this.offset = Math.abs(state.start + state.offset - this.start);
-    };
-}).call(ntxt.State.prototype);
-
 ntxt.BlockParser = function() {
-    this.stack = [] // stack of states to resume parsing
 };
 
 // ntxt.BlockParser definition.
 (function(){
 
-    var extractTags = function(block, line) {
+    /**
+     * Pull tags out of a line.
+     */
+    this.extractTags = function(){
+        var line = this.lines[this.currentLine];
         var re = /^\s*\[([^\[]+)\]/m;
         var m;
         while ( ( m = re.exec(line) ) ) {
-            block.addTag(m[1]);
+            this.currentBlock.addTag(m[1]);
             line = line.substr(m[0].length);
         }
     };
       
-    // Return an array of [ hlevel, and the text in the h level ] or null.
-    var hlevel = function(line) {
+    // Return an array of [ hlevel, text, linecount (1 or 2) ] or undefined.
+    this.hlevel = function() {
+        var line = this.lines[this.currentLine];
+        var nextLine;
+
+        if (this.lines.length > this.currentLine+1) {
+            nextLine = this.lines[this.currentLine+1];
+        } else {
+            nextLine = undefined;
+        }
+
         var m;
         if ( ( m = line.match( "^\\s*=([^=].*)=\\s*$") ) ) {
-          return [ 1, m[1] ];
+          return [ 1, m[1], 1 ];
         } else if ( ( m = line.match("^\\s*==([^=].*)==\\s*$") ) ) {
-          return [ 2, m[1] ];
+          return [ 2, m[1], 1 ];
         } else if ( ( m = line.match("^\\s*===([^=].*)===\\s*$") ) ) {
-          return [ 3, m[1] ];
+          return [ 3, m[1], 1 ];
         } else if ( ( m = line.match("^\\s*====([^=].*)====\\s*$") ) ) {
-          return [ 4, m[1] ];
+          return [ 4, m[1], 1 ];
         } else if ( ( m = line.match("^\\s*=====([^=].*)=====\\s*$") ) ) {
-          return [ 5, m[1] ];
+          return [ 5, m[1], 1 ];
         } else if ( ( m = line.match("^\\s*======([^=].*)======\\s*$") ) ) {
-          return [ 6, m[1] ];
+          return [ 6, m[1], 1 ];
+        } else if ( ( m = line.match("^\\s*#\\s*(.*)$")) ) {
+          return [ 1, m[1], 1 ];
+        } else if ( ( m = line.match("^\\s*##\\s*(.*)$")) ) {
+          return [ 2, m[1], 1 ];
+        } else if ( ( m = line.match("^\\s*###\\s*(.*)$")) ) {
+          return [ 3, m[1], 1 ];
+        } else if ( ( m = line.match("^\\s*####\\s*(.*)$")) ) {
+          return [ 4, m[1], 1 ];
+        } else if ( ( m = line.match("^\\s*#####\\s*(.*)$")) ) {
+          return [ 5, m[1], 1 ];
+        } else if ( ( m = line.match("^\\s*######\\s*(.*)$") ) ) {
+          return [ 6, m[1], 1 ];
+        } else if ( !! nextLine && (m = nextLine.match("^\\s*==+\\s*$") ) ) {
+          return [ 1, line, 2 ];
+        } else if ( !! nextLine && (m = nextLine.match("^\\s*--+\\s*$") ) ) {
+          return [ 2, line, 2 ];
         } else {
           return undefined;
         }
     }; // hlevel
-      
-    this.parseLines = function() {
-        var state = this.stack[this.stack.length-1];
 
-        var line = state.currLine();
-        
-        while (undefined != line){
-        
-            var tmp = hlevel(line);
-        
-            if ( tmp ) {
-                state.consume();
-                this.parseHlevel(parseInt(tmp[0]), tmp[1]);
-                line = state.currLine();
-            } else if ( ( tmp = line.match(/^(\s*)(\S.*)$/) ) ) {
-                state.consume();
-                this.parseIndent(tmp[1].length, tmp[2]);
-                line = state.currLine();
-            } else {
-                line = state.nextLine();
+    this.computeIndent = function(){
+        var m = this.lines[this.currentLine].match("^(\\s*).*$");
+        return m[1].length;
+    };
+
+    this.closeBlock = function()
+    {
+        this.currentBlock.offset =
+            this.currentOffset - this.currentBlock.start-1;
+        this.currentBlock = this.currentBlock.parent;
+    }
+      
+    /**
+     * Called by parse.
+     * This does the parsing of this.lines.
+     */
+    this.parseLines = function() {
+        while(this.currentLine < this.lines.length) {
+
+            this.extractTags();
+
+            // Check if there is an header.
+            var hlevel = this.hlevel();
+
+            // If there is a header, create a block for it.
+            if (hlevel) {
+
+                // While header > hlevel[0], close the current block.
+                while (this.currentBlock.header >= hlevel[0]) {
+                    this.closeBlock();
+                }
+
+                this.currentBlock = new ntxt.Block(
+                    this.currentBlock.ntxt,
+                    this.currentBlock,
+                    this.currentOffset);
+                this.currentBlock.header = hlevel[0];
+
+                for (var i = 0; i < hlevel[2]; ++i) {
+                    this.nextLine();
+                }
+
+                this.currentIndent = 0;
+
+                continue;
             }
+
+            var indent = this.computeIndent();
+            if (indent < this.currentIndent) {
+                this.closeBlock();
+                this.currentIndent = indent;
+            } else if (indent > this.currentIndent) {
+                this.currentBlock = new ntxt.Block(
+                    this.currentBlock.ntxt,
+                    this.currentBlock,
+                    this.currentOffset);
+                this.currentBlock.indent = indent;
+                this.currentIndent = indent;
+            }
+
+            this.nextLine();
+        }
+
+        while ( ! this.currentBlock.isRoot()) {
+            this.closeBlock();
         }
     };
 
-    // Parse a uniformly indented body of text.
-    this.parseIndent = function(indentLevel, text) {
-        var state = this.stack[this.stack.length-1];
-        var line = state.currLine();
-        
-        // Build the block. Update the offset.
-        var block = new ntxt.Block(state.block.ntxt, 
-                                   state.block, 
-                                   state.start, 
-                                   state.offset);
-                               
-        // Position state at the end of the block.
-        // Blocks are ended by empty lines or lines with = starting them.
-        while ( line != undefined ) {
-          
-            if (hlevel(line))
-                break;
-              
-            var m = line.match(/^(\s*)(..*)$/);
-          
-            // Found a header. Break.
-            if ( m == undefined )
-                break;
-          
-            var nextIndentLevel = m[1].length;
-            var nextLine = m[2];
-          
-            // Higher level block. Break.
-            if ( nextIndentLevel < indentLevel )
-              break;
+    this.nextLine = function()
+    {
+        // +1 for the split-on \n character.
+        this.currentOffset += this.lines[this.currentLine].length + 1;
+        this.currentLine += 1;
+    }
 
-            if ( nextIndentLevel > indentLevel ) {
-                // Advance to the next line after parsing a subblock
-                var subState = new ntxt.State(
-                    state.lines,
-                    block,
-                    state.line,
-                    state.start + state.offset,
-                    state.lineEnd);
-            
-                this.stack.push(subState);
-                this.parseIndent(nextIndentLevel, nextLine);
-                this.stack.pop();
-                state.seek(subState);
-                line = state.currLine();
-            } else {
-                // Advance to the next line. Indentation is equal.
-                extractTags(block, line);
-            
-                line = state.nextLine();
-            }
-        } // while
-        
-        // Update the offset of the partially constructed block.
-        block.offset = state.offset;
-        state.consume();
-      };
-
-      // Consume an entier h-level block and build it.
-      this.parseHlevel = function(level, title) {
-          var state = this.stack[this.stack.length-1];
-          var line = state.nextLine();
-        
-          while (line != null) {
-
-              var hl = hlevel( line );
-          
-              if ( hl && parseInt(hl[0]) <= level )
-                  break;           // We're done.
-          
-              line = state.nextLine();
-          }
-        
-          var block = new ntxt.Block(
-              state.block.ntxt, 
-              state.block, 
-              state.start, 
-              state.offset);
-          var subState = new ntxt.State(
-              state.lines,
-              block,
-              state.lineStart + 1,
-              state.start + state.lines[state.lineStart].length + 1,
-              state.line);
-        
-          this.stack.push(subState);
-          this.parseLines();
-          this.stack.pop();
-        
-          state.consume();
-      };
-
-      // Helper that sets up the parseLines function
-      this.parse = function(ntxtObj) {
+    // Helper that sets up the parseLines function
+    this.parse = function(ntxtObj) {
       
-          if ( !(  ntxtObj instanceof ntxt.Ntxt ) ) {
-              ntxtObj = new ntxt.Ntxt(ntxtObj);
-          }
-        
-          var lines = ntxtObj.text.split("\n");
-        
-          var rootBlock = new ntxt.Block(ntxtObj);
-        
-          this.stack = [ new ntxt.State( lines, rootBlock, 0, 0, lines.length ) ];
+        if ( !(  ntxtObj instanceof ntxt.Ntxt ) ) {
+            ntxtObj = new ntxt.Ntxt(ntxtObj);
+        }
+       
+        var rootBlock = new ntxt.Block(ntxtObj);
 
-          this.parseLines();
+        //this.stack = [];
+        this.lines = ntxtObj.text.split("\n");
+        this.currentLine = 0;
+        this.currentOffset = 0;
+        this.currentIndent = 0;
+        this.currentBlock = rootBlock;
+
+        this.parseLines();
         
-          if ( this.stack.length == 1 ) {
-              // parse success!
-              return rootBlock;
-          } else {
-              // parse fail!
-              return undefined;
-          }
-      };
+        return rootBlock;
+    };
 }).call(ntxt.BlockParser.prototype);
   

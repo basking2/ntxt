@@ -1,4 +1,5 @@
-= Ntxt =
+NTxt
+====
 
   Ntxt is a simple plain-text note file. This website is a simple parser
   and view placed on top of that file format.
@@ -9,7 +10,8 @@
   starting with http or https into links like this:
   http://www.google.com
 
-== Controls ==
+Controls
+========
 
   o Double click to collapse a box.
   o Start a line with a [tagName] to tag that blocks as having that tag name.
@@ -18,11 +20,13 @@
     we don't stem words.
   [controls]
 
-== More? ==
+More?
+=====
   o The n.txt file that backs this page: http://dl.dropbox.com/u/24178519/ndemo/n.txt
   o Check out the about link.
   o Got feed back? Send it, but remember that this is supposed to be a 
     view-only with few, but powerful, features..
   o Enjoy!
   [more]
+
 

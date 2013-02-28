@@ -10,6 +10,14 @@ function wikiText(txt) {
   txt = txt.replace(/^\s*=== (.*) ===/g, '<h3 class="ntxt_h">$1</h3>');
   txt = txt.replace(/^\s*== (.*) ==/g, '<h2 class="ntxt_h">$1</h2>');
   txt = txt.replace(/^\s*= (.*) =/g, '<h1 class="ntxt_h">$1</h1>');
+  txt = txt.replace(/^\s*######\s*(.*)/g, '<h6 class="ntxt_h">$1</h6>');
+  txt = txt.replace(/^\s*#####\s*(.*)/g, '<h5 class="ntxt_h">$1</h5>');
+  txt = txt.replace(/^\s*####\s*(.*)/g, '<h4 class="ntxt_h">$1</h4>');
+  txt = txt.replace(/^\s*###\s*(.*)/g, '<h3 class="ntxt_h">$1</h3>');
+  txt = txt.replace(/^\s*##\s*(.*)/g, '<h2 class="ntxt_h">$1</h2>');
+  txt = txt.replace(/^\s*#\s*(.*)/g, '<h1 class="ntxt_h">$1</h1>');
+  txt = txt.replace(/^(.*)\n^\s*==+\s*$/gm, '<h1 class="ntxt_h">$1</h1>');
+  txt = txt.replace(/^(.*)\n^\s*--+\s*$/gm, '<h2 class="ntxt_h">$1</h2>');
   txt = txt.replace(/(https?:\/\/\S*)/g, '<a href="$1">$1</a>');
   return txt
 }
@@ -22,6 +30,14 @@ function stripHeaderMarks(txt) {
   txt = txt.replace(/^\s*=== (.*) ===/g, '$1');
   txt = txt.replace(/^\s*== (.*) ==/g, '$1');
   txt = txt.replace(/^\s*= (.*) =/g, '$1');
+  txt = txt.replace(/^\s*######\s*(.*)/g, '$1');
+  txt = txt.replace(/^\s*#####\s*(.*)/g, '$1');
+  txt = txt.replace(/^\s*####\s*(.*)/g, '$1');
+  txt = txt.replace(/^\s*###\s*(.*)/g, '$1');
+  txt = txt.replace(/^\s*##\s*(.*)/g, '$1');
+  txt = txt.replace(/^\s*#\s*(.*)/g, '$1');
+  txt = txt.replace(/^(.*)\n^\s*==+\s*$/gm, '$1');
+  txt = txt.replace(/^(.*)\n^\s*--+\s*$/gm, '$1');
   return txt
 }
 
