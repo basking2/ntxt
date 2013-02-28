@@ -26,6 +26,7 @@ if File.exists?(DEFAULT_CONFIG_FILE)
     $configs.merge!(YAML::load(io))
   end
 else
+  puts("Creating configuration file #{DEFAULT_CONFIG_FILE}")
   File.open(DEFAULT_CONFIG_FILE, 'w') do |io|
     YAML::dump($configs, io)
   end
@@ -156,8 +157,7 @@ module TagPrintModes
   end
 end
 
-$configs[:tag_string] = ARGV.shift if ARGV.length > 0
-
+# Attempt to open the n.txt file or fail with clean error.
 begin
   ntxt = File.open($configs[:filename]) { |io| Ntxt::Ntxt.new(io.read) }
 rescue Errno::ENOENT => e
@@ -165,6 +165,7 @@ rescue Errno::ENOENT => e
   exit 1
 end
 
+# Execute the application command.
 case $configs[:cmd]
 when 'print_tags'
   # Notice that we are re-wrapping the tags back into square brackets.
