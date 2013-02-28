@@ -148,11 +148,11 @@ ntxt.BlockParser = function() {
      */
     this.extractTags = function(){
         var line = this.lines[this.currentLine];
-        var re = /^\s*\[([^\[]+)\]/m;
+        var re = /\[([^\[]+)\]/m;
         var m;
         while ( ( m = re.exec(line) ) ) {
             this.currentBlock.addTag(m[1]);
-            line = line.substr(m[0].length);
+            line = line.replace(re, '')
         }
     };
       

@@ -1,5 +1,6 @@
 1.0.0
-  - Starting Changelog.
+  - Tags now are any string that appears on 1 line surrounded by [].
   - Improved help text.
   - Parser rewrite. Much simpler code.
   - Support for Markdown style headers.
+  - Starting Changelog.

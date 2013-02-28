@@ -66,16 +66,14 @@ module Ntxt
     # Extract all the tags from the given line.
     #    Some tag examples:
     #      [a tag] [another tag]
-    #      [a tag] [another tag] Not a tag. [not a tag]
+    #      [a tag] [another tag] Not a tag. [a tag]
     #      No tag on this line.
-    #      No tag on this line either. [not a tag]
     def extractTags()
       line = @lines[@currentLine]
-      re = /^\s*\[([^\[]+)\]/m
+      re = /\[([^\[]+)\]/m
       while line =~ re
         @currentBlock.addTag($~[1])
-        matchLength = $~[0].length
-        line = line[matchLength, line.length - matchLength]
+        line = line.sub(re, '')
       end
     end # self.extractTags
     
