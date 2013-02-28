@@ -29,6 +29,12 @@ module Ntxt
     # The parent Block or nil if this is a root Block.
     attr_accessor :parent
 
+    # The current header level. 0 for no header. 1-6 otherwise.
+    attr_accessor :header
+
+    # The current indent level. If this is a header block, ident=0.
+    attr_accessor :indent
+
     # Create a new Block. Typically you will never need to do this.
     # Blocks are created by Parser.
     # [ntxtObj] The Ntxt object that this block belongs to.
@@ -43,6 +49,8 @@ module Ntxt
       @offset = stopTxt || ntxtObj.text.length
       @ntxt = ntxtObj
       @parent = parentBlock
+      @indent = 0
+      @header = 0
       
       if @parent
         re = /\s*\S/m
@@ -84,7 +92,7 @@ module Ntxt
     end
     
     # Return true if the parent object is nil.
-    def is_root?
+    def root?
       @parent.nil?
     end
     
