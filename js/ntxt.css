@@ -44,6 +44,7 @@ div.ntxt {
   margin-left: 0px;
   /* Setup the border style for mouse hovers. */
   border-left: 3px #a0a0f0 none;
+  overflow: auto;
 }
 
 /* Level specific style. */
