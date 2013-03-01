@@ -33,7 +33,7 @@ else
 end
 
 OptionParser.new do |opt|
-  opt.version="1.0.7"
+  opt.version="1.0.8"
   opt.banner = "Ussage: #{$0} [options] [ntxt file]\n\n" +
                "Options:\n"
 
