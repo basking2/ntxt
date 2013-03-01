@@ -42,6 +42,7 @@ ntxt.Block = function(ntxtObj, parentBlock, startTxt, stopTxt) {
     this.offset = stopTxt || ntxtObj.text.length;
     this.ntxt = ntxtObj;
     this.header = 0;
+    this.indent = 0;
     this.parent = parentBlock;
 
     // Set the indent to possibly non-zero if there is a parent block.
@@ -229,7 +230,9 @@ ntxt.BlockParser = function() {
             if (hlevel) {
 
                 // While header > hlevel[0], close the current block.
-                while (this.currentBlock.header >= hlevel[0]) {
+                while ( ( this.currentBlock.parent && this.currentBlock.header == 0) ||
+                          this.currentBlock.header >= hlevel[0] )
+                {
                     this.closeBlock();
                 }
 
@@ -243,22 +246,20 @@ ntxt.BlockParser = function() {
                     this.nextLine();
                 }
 
-                this.currentIndent = 0;
-
                 continue;
             }
 
             var indent = this.computeIndent();
-            if (indent < this.currentIndent) {
+            while (this.currentBlock.header == 0 && this.currentBlock.indent > indent) {
                 this.closeBlock();
-                this.currentIndent = indent;
-            } else if (indent > this.currentIndent) {
+            }
+            
+            if (indent > this.currentBlock.indent) {
                 this.currentBlock = new ntxt.Block(
                     this.currentBlock.ntxt,
                     this.currentBlock,
                     this.currentOffset);
                 this.currentBlock.indent = indent;
-                this.currentIndent = indent;
             }
 
             this.nextLine();

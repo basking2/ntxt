@@ -91,7 +91,6 @@ module Ntxt
       @lines = ntxtObj.text.split("\n")
       @currentLine = 0
       @currentOffset = 0
-      @currentIndent = 0
       @currentBlock = rootBlock
       
       parseLines()
@@ -111,7 +110,7 @@ module Ntxt
         hlvl = hlevel
 
         if hlvl
-          while @currentBlock.header >= hlvl[0] do
+          while (not @currentBlock.root? && @currentBlock.header == 0) || @currentBlock.header >= hlvl[0] do
             closeBlock
           end
 
@@ -122,22 +121,21 @@ module Ntxt
           @currentBlock.header = hlvl[0]
 
           hlvl[2].times { nextLine }
-          @currentIndent = 0
 
           next
         end
 
         indent = computeIndent
-        if indent < @currentIndent
+        while @currentBlock.header == 0 && @currentBlock.indent > indent do
           closeBlock
-          @currentIndent = indent
-        elsif indent > @currentIndent
+        end
+
+        if indent > @currentBlock.indent
           @currentBlock = Block.new(
             @currentBlock.ntxt,
             @currentBlock,
             @currentOffset)
           @currentBlock.indent = indent
-          @currentIndent = indent
         end
 
         nextLine

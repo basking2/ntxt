@@ -1,3 +1,5 @@
+1.0.1
+  - Bug Fix: Close blocks when appropriate.
 1.0.0
   - Tags now are any string that appears on 1 line surrounded by [].
   - Improved help text.
