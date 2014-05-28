@@ -6,9 +6,10 @@ module Ntxt
   # The parser for Ntxt. Most of this a typical user will not find useful
   # with the exception of Parser.parse.
   class Parser
-  
-    # Return an array in which the first element is the indent length and
-    # the second element is the contained text. Nil otherwise.
+
+    # Return an array in which the first element is the indent length,
+    # the second element is the contained text, and the third is the number of lines
+    # spanned (1 or 2). Nil otherwise.
     def hlevel()
       line = @lines[@currentLine]
 
@@ -76,13 +77,13 @@ module Ntxt
         line = line.sub(re, '')
       end
     end # self.extractTags
-    
+
     # Parse the given Ntxt 's Ntxt#text.
     # [ntxtObj] If this is an Ntxt object, Ntxt#text is parsed.
     #           If +ntxtObj+ is not an Ntxt object, it is assumed to be
     #           a valid argument for Ntxt.new and a new Ntxt is constructed.
     def parse(ntxtObj)
-    
+
       # If ntxtObj isn't an Ntxt, create it as one.
       ( ntxtObj = Ntxt.new(ntxtObj) ) unless ntxtObj.is_a?( Ntxt )
 
@@ -92,9 +93,9 @@ module Ntxt
       @currentLine = 0
       @currentOffset = 0
       @currentBlock = rootBlock
-      
+
       parseLines()
-      
+
       rootBlock
     end # parse(ntxtObj)
 
@@ -120,6 +121,7 @@ module Ntxt
             @currentOffset)
           @currentBlock.header = hlvl[0]
 
+          # Consume used lines.
           hlvl[2].times { nextLine }
 
           next

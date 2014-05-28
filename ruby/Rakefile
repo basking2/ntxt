@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rubygems/package_task'
-require 'rake/testtask'
 gem 'rdoc'
+require 'rake/testtask'
 require 'rdoc/rdoc'
 require 'rdoc/task'
 
@@ -25,7 +25,8 @@ spec = Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.author = 'Sam Baskinger'
   s.email = 'basking2@yahoo.com'
-  s.homepage = 'http://coffeesgone.wordpress.com'
+  s.homepage = 'http://sam.baskinger.tiddlyspot.com'
+  s.license = 'MIT'
   s.description = <<EOF
 A library and command line tool for parsing plain text into blocks by
 indentation and a simple wiki-esque == header == notation. Tagging of blocks
@@ -39,7 +40,7 @@ end
 
 Rake::TestTask.new do |t|
   t.libs << "test"
-  t.test_files = FileList['test/test*.rb']
+  t.test_files = FileList['test/ts*.rb']
   t.verbose = true
 end
 

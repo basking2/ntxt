@@ -40,7 +40,7 @@ OptionParser.new do |opt|
   opt.on('--trace', 'Trace through the file printing summaries.' ) do |v|
     $configs[:cmd] = 'trace'
   end
-  
+
   opt.on('-p','--print', 'Print the whole file one block at a time.' ) do |v|
     $configs[:cmd] = 'print'
   end
@@ -52,12 +52,12 @@ OptionParser.new do |opt|
   opt.on('-T', '--print_tags', 'Print all tags in the document.') do |v|
     $configs[:cmd] = 'print_tags'
   end
-    
+
   opt.on('-t', '--tag=String', 'Print blocks with tags contaning this.') do |v|
     $configs[:cmd] = 'tag'
     $configs[:tag_string] = v
   end
-  
+
   opt.on('--path', 'Print the path to tagged block.') do |v|
     $configs[:tag_print_mode] = 'path'
   end
@@ -68,12 +68,12 @@ OptionParser.new do |opt|
     $configs[:tag_print_mode] = 'leaf'
   end
 
-  opt.on('-l', '--last=[Integer]', 
+  opt.on('-l', '--last=[Integer]',
     'Show the last n top-level blocks.') do |v|
     $configs[:cmd] = 'last'
     $configs[:last] = (v.nil?)? 1 : v.to_i
   end
-      
+
   opt.on('-s','--search=String', 'Search the text for.' ) do |v|
     $configs[:cmd] = 'search'
     $configs[:search_string] = v
@@ -127,7 +127,7 @@ module TagPrintModes
       lambda do |depth, block|
         each_matched_tag(block, tag_string) do |tag|
           if block.tags[tag] == 0 and
-             block.parent and 
+             block.parent and
              block.parent.tags[tag] == 1
             printNonEmpty(block.parent.text)
           end
@@ -136,7 +136,7 @@ module TagPrintModes
       lambda { |depth, block| } )
   end
 
-  # Print txt always. Effectively this presents a pruned 
+  # Print txt always. Effectively this presents a pruned
   # text path of text that is tagged.
   #
   # This is essentially the Ntxt::Ntxt.walkText algorithm.
@@ -201,9 +201,9 @@ when 'edit'
 when 'trace'
   ntxt.walkText(
     lambda { |txt, depth, block| print txt },
-    lambda { |depth, block| 
-      puts "-----> #{depth} #{block.tags.keys.sort.join(',')}" },
-    lambda { |depth, block| 
+    lambda { |depth, block|
+      puts "-----> #{depth} indent:#{block.indent} #{block.tags.keys.sort.join(',')}" },
+    lambda { |depth, block|
       puts "<----- #{depth} " } )
 when ''
   # nop

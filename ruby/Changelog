@@ -1,3 +1,9 @@
+1.0.8
+  - Renamed test files to tc_*.rb and bundling into ts_all.rb.
+  - Updated unit tests to match new block parsing.
+  - Unit testing using gem 'test-unit' for now.
+  - Bug Fix: Do not inherit the parent block's indentation. The parser will do
+    that work.
 1.0.7
   - Bug Fix: Close blocks when appropriate.
 1.0.6
