@@ -1,0 +1,143 @@
+<html>
+<head>
+<title>About Ntxt</title>
+<style>
+body {
+  font-family: Arial;
+  font-size: 12px;
+}
+
+h1 {
+  font-size: 115%;
+}
+
+h2 {
+  font-size: 105%;
+}
+
+#license {
+  font-family: monospace;
+  border: 1px solid #a0a0a0;
+  margin-left: 0.25in;
+  padding: 0.25in;
+  line-height: 150%;
+  width: 80em;
+}
+</style>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="toc.js"></script>
+
+<script type="text/javascript">
+  // On load...
+  $(document).ready(function(){
+    var toc = new TableOfContents('toc');
+
+    jQuery.get('LICENSE', function(d) {
+        $('#license').html(d)
+    }, 'text');
+  })
+</script>
+</head>
+<body>
+
+<h1>Contents</h1>
+<div id='toc'></div>
+
+<h1>License</h1>
+
+<p>Ntxt software is licensed under the MIT license. A copy of this
+distribution's copy is available <a href="LICENSE">here</a>.</p> Or here:
+
+<pre id="license">
+Javascript load of LICENSE file should replace this.
+</pre>
+
+<h1>About Ntxt</h1>
+
+<p><i>A tool to view n.txt formatted notes files.</i></p>
+
+<p>Ntxt is a reference to my <code>n.txt</code> file. In that file are notes
+in plain text. There are some wiki-like conventions to give it structure and
+help guide my reading and assist in searching or grepping for information.</p>
+
+<p>There is no way to edit the <code>n.txt</code> file through ntxt.html. 
+It's just here as a display tool.</p>
+
+<h2>Controls</h2>
+
+<ol>
+  <li>The "About" link links to this page.</li>
+  <li>The "Top" and "End" links link to the top and end of the page.</li>
+  <li>The "Toggle All" link collapses or expands all the text blocks.</li>
+  <li>Finally, the search drop-down controls what will be filtered (tags or 
+      all text) when the search box is typed in.</li>
+</ol>
+
+<h1>Formatting Rules</h1>
+<h2>Headers</h2>
+
+<p>Header lines look like something you would see out of a wiki.</p>
+
+<pre>
+  = Header 1 =
+  == Header 2 ==
+  = Another Header 1 =
+</pre>
+  
+<p>Header 1 is the largest and highest header. All text after it, aside from
+another 1-header, will be considered a sub-block. In the example 
+"Header 1" and "Another Header 1" are the two top-level blocks. "Header 2" is
+a child of "Header 1".</p>
+
+<h2>Indentation</h2>
+
+<p>Indentation also forms blocks.</p>
+
+<pre>
+  = Header 1 =
+  == Header 2 ==
+    Sub block of header 2.
+      Sub block of the preceding line.
+    Another block below header 2.
+  = Another Header 1 =
+</pre>
+
+<p>In the above example Header 2 has 1 sub-block because there is an indentation
+of 2-spaces with an intermediate indentation of 4-spaces. That 4-space line
+is bundled into a subblock to the 2-space indented block of text.
+</p>
+
+<p>The only ways to break out of this 2-indent text is to:</p>
+
+<ol>
+<li> Put in an empty line. That is, a line with no indenting. A line with only
+     two spaces on it will be seen as a continuation of the 2-indent block.</li>
+<li> Indent more shallowly, such as a 1-space line.</li>
+<li> Put in a header.</li>
+</ol>
+
+<h2>Tags</h2>
+
+<p>Lines beginning with [tag1] [tag2] (ignoring whitespace) are considered to 
+have tags <code>tag1</code> and <code>tag2</code>. For example:</p>
+
+<pre>
+  Block1
+  [block 1 tag] [example]
+  
+  [this is tag] Block2 [not a tag]
+  [block 2 tag] [example]
+</pre>
+  
+<p>Notice, tag names may have spaces. Both blocks are tagged with 
+<code>example</code>.  And finally, <code>not a tag</code> is, well, 
+not a tag. It does not start a line.</p>
+
+<p>Also note that you can't tag header blocks directly because the header line
+must start with = and tag lines must begin with [. Blocks inherit all their 
+child blocks' tags, though, so finding header blocks by tags is still possible.
+</p>
+
+</body>
+</html>

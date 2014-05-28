@@ -1,0 +1,114 @@
+body {
+  font-family: Arial, "Sans";
+  font-size: 12px;
+  background: #f0f0f0;
+}
+
+h1 { font-size: 120%; margin: 0px; padding: 0px; color: #000070; }
+h2 { font-size: 115%; margin: 0px; padding: 0px; color: #000070; }
+h3 { font-size: 110%; margin: 0px; padding: 0px; color: #000070; }
+h4 { font-size: 105%; margin: 0px; padding: 0px; color: #000070; }
+h5 { font-size: 100%; margin: 0px; padding: 0px; color: #000070; }
+h6 { font-size: 100%; margin: 0px; padding: 0px; color: #000070; }
+
+.ntxt {
+  margin: 0em;
+  padding: 0em;
+}
+
+.ntxt_hidden {
+  font-style: italic;
+  font-weight: bold;
+  color: #a0a0a0;
+}
+
+.ntxt_h {
+  font-family: Arial, "Sans";
+  border-top-left-radius:0.3em;
+  border-top: 1px solid #000070;
+  border-left: 1px solid #000070;
+  padding: 0.5em;
+  background:
+}
+
+pre.ntxt { 
+  font-family: "Liberation Mono",
+               "Anonymous Pro",
+               "Nimbus Mono",
+               "Courier", 
+               "Monospace";
+}
+
+div.ntxt {
+  padding-left: 0px;
+  margin-left: 0px;
+  /* Setup the border style for mouse hovers. */
+  border-left: 3px #a0a0f0 none;
+  overflow: auto;
+}
+
+/* Level specific style. */
+.ntxt_0 { }
+.ntxt_1 { }
+.ntxt_2 { }
+.ntxt_3 { }
+.ntxt_4 { }
+.ntxt_5 { }
+.ntxt_6 { }
+
+#toc { 
+  display: none;
+}
+
+#help {
+  position: fixed; /* Could be fixed or absolute. */
+  right: 3em;
+  bottom: 3ex;
+  left: 3em;
+  top: 3ex;
+  padding: 1em;
+  display: none;
+  background: rgba(255,255,255,0.95);
+  border-top-left-radius:0.3em;
+}
+
+#controller {
+  position: fixed; /* Could be fixed or absolute. */
+  right: -0;
+  bottom: -0;
+  background: rgba(255,255,255,0.80);
+}
+
+.niceBox { 
+  background: white;
+  border-radius:0.3em;
+  padding: 1em;
+}
+
+#allTagsLabel { 
+  font-weight: bold;
+}
+
+#allTags, #allTagsLabel {
+  display: inline-block;
+}
+
+#allTagsPanel { 
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+  border: 2px solid #003399;
+  box-shadow: 2px 5px 5px #8888c0;
+}
+
+#ntxtDiv {
+  /* Pad the very bottom so our controller never obscures text. */
+  padding-bottom: 3em;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #003399;
+  box-shadow: 2px 5px 5px #8888c0;
+}
+

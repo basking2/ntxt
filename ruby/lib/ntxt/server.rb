@@ -39,13 +39,18 @@ module Ntxt
     def start
       Sinatra::Base.class_exec(self) do |svr|
         set :port, svr.port
+        set :public_folder, File.dirname(__FILE__) + '/server'
 
-        get '/file', :provides => ['text'] do
+        get '/index.txt', provides: ['text'] do
           svr.file
         end
 
+        get '/index.md' do
+          markdown svr.file
+        end
+
         get '/' do
-          svr.file
+          send_file File.dirname(__FILE__) + '/server/ntxt.html', type: 'html'
         end
 
         start!
