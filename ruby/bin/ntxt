@@ -45,15 +45,16 @@ OptionParser.new do |opt|
     $configs[:cmd] = 'print'
   end
 
-  opt.on('-e','--edit', 'Edit using $NTXT_EDITOR or $EDITOR.' ) do |v|
+  opt.on('-e','--edit [Editor]', 'Edit using $NTXT_EDITOR or $EDITOR.' ) do |v|
     $configs[:cmd] = 'edit'
+    $configs[:editor] = v if v
   end
 
   opt.on('-T', '--print_tags', 'Print all tags in the document.') do |v|
     $configs[:cmd] = 'print_tags'
   end
 
-  opt.on('-t', '--tag=String', 'Print blocks with tags contaning this.') do |v|
+  opt.on('-t', '--tag String', 'Print blocks with tags contaning this.') do |v|
     $configs[:cmd] = 'tag'
     $configs[:tag_string] = v
   end
@@ -68,13 +69,12 @@ OptionParser.new do |opt|
     $configs[:tag_print_mode] = 'leaf'
   end
 
-  opt.on('-l', '--last=[Integer]',
-    'Show the last n top-level blocks.') do |v|
+  opt.on('-l', '--last [Integer]', 'Show the last n top-level blocks.') do |v|
     $configs[:cmd] = 'last'
     $configs[:last] = (v.nil?)? 1 : v.to_i
   end
 
-  opt.on('-s','--search=String', 'Search the text for.' ) do |v|
+  opt.on('-s','--search String', 'Search the text for.' ) do |v|
     $configs[:cmd] = 'search'
     $configs[:search_string] = v
   end

@@ -1,4 +1,6 @@
 1.0.8
+  - Normalized long options to not use equal signs.
+  - Editor takes optional value of program to edit document with.
   - Renamed test files to tc_*.rb and bundling into ts_all.rb.
   - Updated unit tests to match new block parsing.
   - Unit testing using gem 'test-unit' for now.
