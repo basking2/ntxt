@@ -8,6 +8,7 @@ require 'yaml'
 $configs = {
   :cmd => 'last',
   :last => 1,
+  :port => 8080,
   :tag_string => '',
 
   # Replace with command of editor. Otherwise NTXT_EDITOR and EDITOR are used.
@@ -77,6 +78,11 @@ OptionParser.new do |opt|
   opt.on('-s','--search String', 'Search the text for.' ) do |v|
     $configs[:cmd] = 'search'
     $configs[:search_string] = v
+  end
+
+  opt.on('-S', '--server [Integer]', 'Startup server on the given port.') do |v|
+    $configs[:cmd] = 'server'
+    $configs[:port] = v if v
   end
 end.parse! ARGV
 
@@ -205,6 +211,11 @@ when 'trace'
       puts "-----> #{depth} indent:#{block.indent} #{block.tags.keys.sort.join(',')}" },
     lambda { |depth, block|
       puts "<----- #{depth} " } )
+when 'server'
+  puts "Starting server on port #{$configs[:port]}."
+  require 'ntxt/server'
+  server = Ntxt::Server.new($configs[:filename], $configs[:port])
+  server.start
 when ''
   # nop
 when nil
