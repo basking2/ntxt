@@ -63,10 +63,10 @@ module Ntxt
     # [stopTxt] The initial offset. If nil this is set to ntxtObj.text.length.
     def initialize(ntxtObj, parentBlock=nil, startTxt=0, stopTxt=0)
       @children = []
-      @tags = Hash.new(0)
-      @start = startTxt
+      @tags   = Hash.new(0)
+      @start  = startTxt
       @offset = stopTxt || ntxtObj.text.length
-      @ntxt = ntxtObj
+      @ntxt   = ntxtObj
       @parent = parentBlock
       @indent = 0
       @header = 0
@@ -98,6 +98,17 @@ module Ntxt
     # Note that parent blocks include their child blocks' text.
     def text
       @ntxt.text[@start, @offset]
+    end
+
+    # Edit the contents of a block.
+    # This causes a complete reparsing of Ntxt and invalidates all previously blocks
+    # from the associated Ntxt::Ntxt.
+    #
+    # The ntxt is returned.
+    def text=(new_text)
+      t = @ntxt.text
+      @ntxt.text = t[0, @start] + new_text + t[@start+@offset..-1]
+      @ntxt
     end
 
     # Return true if the parent object is nil.

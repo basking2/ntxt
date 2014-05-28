@@ -33,14 +33,23 @@ module Ntxt
     # Create a new Ntxt object. This requires a String that is the text
     # of the object.
     #   ntxt = Ntxt::Ntxt.new( File.open('n.txt'){ |io| io.read } )
-    def initialize(text)
-      @text  = text
-      @rootBlock = (Parser.new).parse(self)
+    def initialize(txt)
+      self.text = txt
     end
 
     # Calls Block#walkText.
     def walkText(print, enter, exit)
       @rootBlock.walkText(print, enter, exit)
+    end
+
+    # Set the text of this Ntxt::Ntxt and parse it.
+    #
+    # Calling this invalides any Ntxt::Block objects previous associated with this Ntxt::Ntxt.
+    # This returns +self+.
+    def text=(txt)
+      @text = txt
+      @rootBlock = (Parser.new).parse(self)
+      self
     end
   end
 end
